@@ -1,22 +1,39 @@
 %{
-  let variable_number = ref 1
-  
-  let print_operation x op y =
-    let variable = "x" ^ (string_of_int !variable_number) in
-    begin
-     incr variable_number;
-     Printf.printf "%s := %s %c %s\n" variable x op y;
-     variable
-    end
+	let print_float x =
+		begin
+			Printf.printf "float := %f\n" x;
+		end
+
+	let print_int x =
+		begin
+			Printf.printf "int := %d\n" x;
+		end
+
+	let print_bool x =
+		begin
+			if x then
+				begin
+					Printf.printf "bool := true\n";
+				end
+			else
+				begin
+					Printf.printf "bool := false\n";
+				end
+		end
+
+	let print_string x =
+		begin
+			Printf.printf "string := %s\n" x;
+		end
 %}
 
 %token EOF
-%token PLUS MINUS MUL DIV
-%token BEGIN_PAR END_PAR
-%token <float> VAL
+%token ERROR
 
-%left PLUS MINUS
-%left MUL DIV
+%token <float> FLOAT
+%token <int> INT
+%token <bool> BOOL
+%token <string> STRING
 
 %start main
 %type <unit> main
@@ -24,18 +41,17 @@
 %%
 
 main:
-  expression EOF {}
+	expressions EOF {}
 ;
+
+expressions:
+	expression {}
+	|	expression expressions {}
 
 expression:
-    operand PLUS operand {print_operation $1 '+' $3}
-  | operand MINUS operand {print_operation $1 '-' $3}
-  | operand MUL operand {print_operation $1 '*' $3}
-  | operand DIV operand {print_operation $1 '/' $3}
-  | BEGIN_PAR expression END_PAR {$2}
-;
-
-operand:
-    VAL {string_of_float $1}
-  | expression {$1}
+	FLOAT {print_float $1}
+	|	INT {print_int $1}
+	|	BOOL {print_bool $1}
+	|	STRING {print_string $1}
+	|	ERROR {print_string "error"}
 ;

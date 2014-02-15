@@ -11,23 +11,23 @@ let flottant = digit+'.'digit+
 let entier = digit+
 let couleur = "red"|"blue"|"yellow"|"green"|"black"|"white"
 let booleen = "true"|"false"
-let chaineCaracs =  "\""['"']*"\""
+let chaineCaracs =  "\""[^'"']*"\""
 
 rule main = parse
-  | "//" {comment lexbuf}
+  | "#" {comment lexbuf}
  
   | '\n'  {main lexbuf}
   | blank {main lexbuf}
   
-  | flottant as x {}
-  | entier as x {}
+  | flottant as x {FLOAT(float_of_string x)}
+  | entier as x {INT(int_of_string x)}
   
-  | couleur as x {}
-  | booleen as x {}
-  | chaineCaracs as x {}
+  | couleur as x {EOF}
+  | booleen as x {BOOL(bool_of_string x)}
+  | chaineCaracs as x {STRING x}
   
-  | eof {EOF}
-  | _ {}
+  | eof { EOF }
+  | _ {ERROR}
 
 and comment = parse
   | '\n' {main lexbuf}
