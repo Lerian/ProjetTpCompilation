@@ -25,6 +25,11 @@
 		begin
 			Printf.printf "string := %s\n" x;
 		end
+
+	let print_color x =
+		begin
+			Printf.printf "color := %s\n" x;
+		end
 %}
 
 %token EOF
@@ -34,6 +39,7 @@
 %token <int> INT
 %token <bool> BOOL
 %token <string> STRING
+%token <string> COLOR
 
 %start main
 %type <unit> main
@@ -53,5 +59,6 @@ expression:
 	|	INT {print_int $1}
 	|	BOOL {print_bool $1}
 	|	STRING {print_string $1}
+	|	COLOR {print_color $1}
 	|	ERROR {print_string "error"}
 ;

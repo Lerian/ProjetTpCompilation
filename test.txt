@@ -4,3 +4,4 @@
 true
 false
 "qzdnqd"
+red blue yellow green black white

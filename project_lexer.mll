@@ -22,7 +22,7 @@ rule main = parse
   | flottant as x {FLOAT(float_of_string x)}
   | entier as x {INT(int_of_string x)}
   
-  | couleur as x {EOF}
+  | couleur as x {COLOR x}
   | booleen as x {BOOL(bool_of_string x)}
   | chaineCaracs as x {STRING x}
   
