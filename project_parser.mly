@@ -111,4 +111,6 @@ booleen:
 	
 	|	booleen AND booleen { (&&) $1 $3}
 	|	booleen OR booleen { (||) $1 $3}
+	
+	|	PAR_G booleen PAR_D {$2}
 ;
