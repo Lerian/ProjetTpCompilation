@@ -14,7 +14,6 @@ let booleen = "true"|"false"
 let chaineCaracs =  "\""[^'"']*"\""
 
 (** Opérateurs *)
-let operateurComparaison = "<"|">"|"<="|">="
 let operateurBooleen = "and"|"or"
 
 rule main = parse
@@ -23,6 +22,7 @@ rule main = parse
   | '\n'  {main lexbuf}
   | blank {main lexbuf}
   
+  (** Les types primitifs *)
   | flottant as x {FLOAT(float_of_string x)}
   | entier as x {INT(int_of_string x)}
   
@@ -30,11 +30,18 @@ rule main = parse
   | booleen as x {BOOL(bool_of_string x)}
   | chaineCaracs as x {STRING x}
   
+  (** Les opérateurs arithmétiques *)
   | '+' {PLUS}
   | '-' {MOINS}
   | '*' {MUL}
   | '/' {DIV}
   | '%' {MOD}
+  
+  (** Les opérateurs de comparaison *)
+  |	'<' {INF}
+  | '>' {SUP}
+  |	"<=" {INF_EGAL}
+  | ">=" {SUP_EGAL}
   
   | '(' {PAR_G}
   | ')' {PAR_D}

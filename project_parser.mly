@@ -42,6 +42,10 @@
 
 %token PAR_G PAR_D
 
+%token INF SUP INF_EGAL SUP_EGAL
+
+%left INF SUP INF_EGAL SUP_EGAL
+
 %token PLUS MOINS MUL DIV MOD
 
 %left PLUS MOINS
@@ -63,7 +67,7 @@ expressions:
 expression:
 	flottant {print_float $1}
 	|	entier {print_int $1}
-	|	BOOL {print_bool $1}
+	|	booleen {print_bool $1}
 	|	STRING {print_string $1}
 	|	COLOR {print_color $1}
 	
@@ -89,4 +93,17 @@ flottant:
 	|	flottant DIV flottant {(/.) $1 $3}
 	
 	|	PAR_G flottant PAR_D {$2}
+;
+
+booleen:
+	BOOL {$1}
+	|	entier INF entier {(<) $1 $3}
+	|	entier SUP entier {(>) $1 $3}
+	|	entier INF_EGAL entier {(<=) $1 $3}
+	|	entier SUP_EGAL entier {(>=) $1 $3}
+	
+	|	flottant INF flottant {(<) $1 $3}
+	|	flottant SUP flottant {(>) $1 $3}
+	|	flottant INF_EGAL flottant {(<=) $1 $3}
+	|	flottant SUP_EGAL flottant {(>=) $1 $3}
 ;
