@@ -38,8 +38,12 @@
 %token <float> FLOAT
 %token <int> INT
 %token <bool> BOOL
-%token <string> STRING
-%token <string> COLOR
+%token <string> STRING COLOR
+
+%token PLUS MOINS MUL DIV MOD
+
+%left PLUS MOINS
+%left MUL DIV MOD
 
 %start main
 %type <unit> main
@@ -55,10 +59,28 @@ expressions:
 	|	expression expressions {}
 
 expression:
-	FLOAT {print_float $1}
-	|	INT {print_int $1}
+	flottant {print_float $1}
+	|	entier {print_int $1}
 	|	BOOL {print_bool $1}
 	|	STRING {print_string $1}
 	|	COLOR {print_color $1}
+	
 	|	ERROR {print_string "error"}
+;
+
+entier:
+	INT {$1}
+	|	entier PLUS entier {(+) $1 $3}
+	|	entier MOINS entier {(-) $1 $3}
+	|	entier MUL entier {( * ) $1 $3}
+	|	entier DIV entier {(/) $1 $3}
+	|	entier MOD entier {(mod) $1 $3}
+;
+
+flottant:
+	FLOAT {$1}
+	|	flottant PLUS flottant {(+.) $1 $3}
+	|	flottant MOINS flottant {(-.) $1 $3}
+	|	flottant MUL flottant {( *. ) $1 $3}
+	|	flottant DIV flottant {(/.) $1 $3}
 ;
