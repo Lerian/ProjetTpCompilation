@@ -36,6 +36,9 @@ rule main = parse
   | '/' {DIV}
   | '%' {MOD}
   
+  | '(' {PAR_G}
+  | ')' {PAR_D}
+  
   
   | eof { EOF }
   | _ {ERROR}

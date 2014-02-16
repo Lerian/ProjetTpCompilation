@@ -40,6 +40,8 @@
 %token <bool> BOOL
 %token <string> STRING COLOR
 
+%token PAR_G PAR_D
+
 %token PLUS MOINS MUL DIV MOD
 
 %left PLUS MOINS
@@ -75,6 +77,8 @@ entier:
 	|	entier MUL entier {( * ) $1 $3}
 	|	entier DIV entier {(/) $1 $3}
 	|	entier MOD entier {(mod) $1 $3}
+	
+	|	PAR_G entier PAR_D {$2}
 ;
 
 flottant:
@@ -83,4 +87,6 @@ flottant:
 	|	flottant MOINS flottant {(-.) $1 $3}
 	|	flottant MUL flottant {( *. ) $1 $3}
 	|	flottant DIV flottant {(/.) $1 $3}
+	
+	|	PAR_G flottant PAR_D {$2}
 ;

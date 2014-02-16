@@ -18,3 +18,6 @@ all_native:
 clean:
 	rm -f *.mli *~ .*~ *.cm[iox] 
 	rm -rf project_lexer.ml project_parser.ml
+
+fullclean: clean
+	rm -f project
