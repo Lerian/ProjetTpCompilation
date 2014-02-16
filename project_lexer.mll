@@ -43,6 +43,10 @@ rule main = parse
   |	"<=" {INF_EGAL}
   | ">=" {SUP_EGAL}
   
+  (** Les opérateurs booléens *)
+  | "and" {AND}
+  | "or" {OR}
+  
   | '(' {PAR_G}
   | ')' {PAR_D}
   

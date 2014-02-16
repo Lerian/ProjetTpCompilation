@@ -46,6 +46,8 @@
 
 %left INF SUP INF_EGAL SUP_EGAL
 
+%token AND OR
+
 %token PLUS MOINS MUL DIV MOD
 
 %left PLUS MOINS
@@ -106,4 +108,7 @@ booleen:
 	|	flottant SUP flottant {(>) $1 $3}
 	|	flottant INF_EGAL flottant {(<=) $1 $3}
 	|	flottant SUP_EGAL flottant {(>=) $1 $3}
+	
+	|	booleen AND booleen { (&&) $1 $3}
+	|	booleen OR booleen { (||) $1 $3}
 ;

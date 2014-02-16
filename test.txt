@@ -16,9 +16,17 @@
 
 5*(2+1)
 
-1 < 1
-2>1
-2<=2
-3>=3
+#1 < 1
+#2>1
+#2<=2
+#3>=3
 
-2.1<2.3
+#2.1<2.3
+
+true and true
+true and false
+true or false
+true or true
+false and false
+
+5<6 and 2>1
