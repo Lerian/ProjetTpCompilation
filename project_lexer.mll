@@ -56,6 +56,8 @@ rule main = parse
   
   (** Les types complexes *)
   | "Circle" {CERCLE}
+  | "Rectangle" {RECTANGLE}
+  | "Point" {POINT}
   
   | eof { EOF }
   | _ {ERROR}

@@ -35,7 +35,17 @@
 	
 	let print_circle c =
 		begin
-			Printf.printf "Cercle: x = %f y = %f radius = %f\n" c.x c.y c.radius;
+			Printf.printf "Cercle: x = %f y = %f radius = %f\n" c.centre.x c.centre.y c.radius;
+		end
+	
+	let print_rectangle r =
+		begin
+			Printf.printf "Rectangle: x = %f y = %f width = %f height = %f\n" r.coinHG.x r.coinHG.y r.width r.height;
+		end
+	
+	let print_point p =
+		begin
+			Printf.printf "Point: x = %f y = %f\n" p.x p.y;
 		end
 %}
 
@@ -49,7 +59,7 @@
 
 %token PAR_G PAR_D VIRG
 
-%token CERCLE
+%token CERCLE RECTANGLE POINT
 
 %token INF SUP INF_EGAL SUP_EGAL
 
@@ -127,5 +137,7 @@ booleen:
 ;
 
 figure:
-	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {let c={x=$3;y=$5;radius=$7} in print_circle c}
+	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in let c={centre=p;radius=$7} in print_circle c}
+	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in let r={coinHG=p;width=$7;height=$9} in print_rectangle r}
+	|	POINT PAR_G flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in print_point p}
 ;
