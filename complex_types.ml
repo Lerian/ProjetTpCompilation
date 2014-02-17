@@ -14,3 +14,7 @@ type rectangle = {
 type ligne = {
 	mutable origine: point;
 	mutable destination: point}
+
+type texte = {
+	mutable position: point;
+	mutable contenu: string}

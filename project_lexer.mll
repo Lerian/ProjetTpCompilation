@@ -59,6 +59,7 @@ rule main = parse
   | "Rectangle" {RECTANGLE}
   | "Point" {POINT}
   |	"Line" {LIGNE}
+  | "Text" {TEXTE}
   
   | eof { EOF }
   | _ {ERROR}
