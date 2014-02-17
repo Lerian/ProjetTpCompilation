@@ -4,7 +4,10 @@ type point = {
 
 type cercle = {
 	mutable c_centre: point; 
-	mutable c_radius: float}
+	mutable c_radius: float;
+	mutable c_couleurContour: string;
+	mutable c_couleurRemplissage: string;
+	mutable c_epaisseurContour: int}
 
 type rectangle = {
 	mutable r_coinHG: point;
@@ -27,17 +30,24 @@ type image = {
 
 (** Les fonctions liées aux types définis précédemment *)
 (** Création *)
-let create_text contenu x y couleur tailleFonte=
+let create_text contenu x y couleur tailleFonte =
 	begin
 		let p={p_x=x; p_y=y} in
 			let t={t_position=p; t_contenu=contenu; t_couleur=couleur; t_tailleFonte=tailleFonte} in
 				t
 	end
+
+let create_circle x y radius couleurContour couleurRemplissage epaisseurContour =
+	begin
+		let p={p_x=x; p_y=y} in
+			let c={c_centre=p; c_radius=radius; c_couleurContour=couleurContour; c_couleurRemplissage=couleurRemplissage; c_epaisseurContour=epaisseurContour} in
+				c
+	end
 	
 (** Affichage *)
 let print_circle c =
 	begin
-		Printf.printf "Cercle: x = %f y = %f radius = %f\n" c.c_centre.p_x c.c_centre.p_y c.c_radius;
+		Printf.printf "Cercle: x = %f y = %f radius = %f couleurContour = %s couleurRemplissage = %s epaisseurContour = %d\n" c.c_centre.p_x c.c_centre.p_y c.c_radius c.c_couleurContour c.c_couleurRemplissage c.c_epaisseurContour;
 	end
 
 let print_rectangle r =

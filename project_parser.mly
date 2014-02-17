@@ -122,16 +122,19 @@ booleen:
 ;
 
 figure:
-	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in let c={c_centre=p;c_radius=$7} in print_circle c}
-	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in let r={r_coinHG=p;r_width=$7;r_height=$9} in print_rectangle r}
+	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in let r={r_coinHG=p;r_width=$7;r_height=$9} in print_rectangle r}
 	|	POINT PAR_G flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in print_point p}
 	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p1={p_x=$3;p_y=$5} in let p2={p_x=$7;p_y=$9} in let l={l_origine=p1;l_destination=p2} in print_line l}
 	|	texte {print_text $1}
+	|	cercle {print_circle $1}
 	|	IMAGE PAR_G entier VIRG entier PAR_D {let i={i_width=$3;i_height=$5} in print_image i}
 ;
 
 texte:
 	TEXTE PAR_G STRING VIRG flottant VIRG flottant PAR_D {create_text $3 $5 $7 "black" 12}
 	|	TEXTE PAR_G STRING VIRG flottant VIRG flottant VIRG COLOR VIRG entier PAR_D {create_text $3 $5 $7 $9 $11}
-	|	TEXTE PAR_G STRING VIRG flottant VIRG flottant VIRG COLOR PAR_D {create_text $3 $5 $7 $9 12}
-	|	TEXTE PAR_G STRING VIRG flottant VIRG flottant VIRG entier PAR_D {create_text $3 $5 $7 "black" $9}
+;
+
+cercle:
+	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {create_circle $3 $5 $7 "black" "white" 1}
+	|	CERCLE PAR_G flottant VIRG flottant VIRG flottant VIRG COLOR VIRG COLOR VIRG entier PAR_D {create_circle $3 $5 $7 $9 $11 $13}
