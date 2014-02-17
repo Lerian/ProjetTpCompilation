@@ -60,6 +60,7 @@ rule main = parse
   | "Point" {POINT}
   |	"Line" {LIGNE}
   | "Text" {TEXTE}
+  | "Image" {IMAGE}
   
   | eof { EOF }
   | _ {ERROR}

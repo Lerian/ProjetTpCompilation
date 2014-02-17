@@ -3,18 +3,22 @@ type point = {
 	mutable y:float}
 
 type cercle = {
-	mutable centre: point; 
-	mutable radius: float}
+	mutable c_centre: point; 
+	mutable c_radius: float}
 
 type rectangle = {
-	mutable coinHG: point;
-	mutable width: float;
-	mutable height: float}
+	mutable r_coinHG: point;
+	mutable r_width: float;
+	mutable r_height: float}
 
 type ligne = {
-	mutable origine: point;
-	mutable destination: point}
+	mutable l_origine: point;
+	mutable l_destination: point}
 
 type texte = {
-	mutable position: point;
-	mutable contenu: string}
+	mutable t_position: point;
+	mutable t_contenu: string}
+
+type image = {
+	i_width: int;
+	i_height: int}
