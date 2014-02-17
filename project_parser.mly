@@ -1,4 +1,6 @@
 %{
+	open Complex_types
+
 	let print_float x =
 		begin
 			Printf.printf "float := %f\n" x;
@@ -30,6 +32,11 @@
 		begin
 			Printf.printf "color := %s\n" x;
 		end
+	
+	let print_circle c =
+		begin
+			Printf.printf "Cercle: x = %f y = %f radius = %f\n" c.x c.y c.radius;
+		end
 %}
 
 %token EOF
@@ -40,7 +47,9 @@
 %token <bool> BOOL
 %token <string> STRING COLOR
 
-%token PAR_G PAR_D
+%token PAR_G PAR_D VIRG
+
+%token CERCLE
 
 %token INF SUP INF_EGAL SUP_EGAL
 
@@ -72,6 +81,8 @@ expression:
 	|	booleen {print_bool $1}
 	|	STRING {print_string $1}
 	|	COLOR {print_color $1}
+	
+	|	figure {}
 	
 	|	ERROR {print_string "error"}
 ;
@@ -113,4 +124,8 @@ booleen:
 	|	booleen OR booleen { (||) $1 $3}
 	
 	|	PAR_G booleen PAR_D {$2}
+;
+
+figure:
+	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {let c={x=$3;y=$5;radius=$7} in print_circle c}
 ;
