@@ -19,7 +19,9 @@ type rectangle = {
 
 type ligne = {
 	mutable l_origine: point;
-	mutable l_destination: point}
+	mutable l_destination: point;
+	mutable l_couleurContour: string;
+	mutable l_epaisseurContour: int}
 
 type texte = {
 	mutable t_position: point;
@@ -53,6 +55,14 @@ let create_rectangle x y width height couleurContour couleurRemplissage epaisseu
 			let r={r_coinHG=p; r_width=width; r_height=height; r_couleurContour=couleurContour; r_couleurRemplissage=couleurRemplissage; r_epaisseurContour=epaisseurContour} in
 				r
 	end
+
+let create_line x1 y1 x2 y2 couleurContour epaisseurContour =
+	begin
+		let p1={p_x=x1; p_y=y1} in
+			let p2={p_x=x2; p_y=y2} in
+				let l={l_origine=p1; l_destination=p2; l_couleurContour=couleurContour; l_epaisseurContour=epaisseurContour} in
+					l
+	end
 	
 (** Affichage *)
 let print_text t =
@@ -77,7 +87,7 @@ let print_point p =
 
 let print_line l =
 	begin
-		Printf.printf "Ligne: x1 = %f y1 = %f x2 = %f y2 = %f\n" l.l_origine.p_x l.l_origine.p_y l.l_destination.p_x l.l_destination.p_y;
+		Printf.printf "Ligne: x1 = %f y1 = %f x2 = %f y2 = %f couleurContour = %s epaisseurContour = %d\n" l.l_origine.p_x l.l_origine.p_y l.l_destination.p_x l.l_destination.p_y l.l_couleurContour l.l_epaisseurContour;
 	end
 
 let print_image i =

@@ -123,10 +123,10 @@ booleen:
 
 figure:
 	POINT PAR_G flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in print_point p}
-	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p1={p_x=$3;p_y=$5} in let p2={p_x=$7;p_y=$9} in let l={l_origine=p1;l_destination=p2} in print_line l}
 	|	texte {print_text $1}
 	|	cercle {print_circle $1}
 	|	rectangle {print_rectangle $1}
+	|	ligne {print_line $1}
 	|	IMAGE PAR_G entier VIRG entier PAR_D {let i={i_width=$3;i_height=$5} in print_image i}
 ;
 
@@ -143,3 +143,8 @@ cercle:
 rectangle:
 	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {create_rectangle $3 $5 $7 $9 "black" "white" 1}
 	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant VIRG COLOR VIRG COLOR VIRG entier PAR_D {create_rectangle $3 $5 $7 $9 $11 $13 $15}
+;
+
+ligne:
+	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {create_line $3 $5 $7 $9 "black" 1}
+	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant VIRG COLOR VIRG entier PAR_D {create_line $3 $5 $7 $9 $11 $13}
