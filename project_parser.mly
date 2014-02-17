@@ -47,6 +47,11 @@
 		begin
 			Printf.printf "Point: x = %f y = %f\n" p.x p.y;
 		end
+	
+	let print_line l =
+		begin
+			Printf.printf "Ligne: x1 = %f y1 = %f x2 = %f y2 = %f\n" l.origine.x l.origine.y l.destination.x l.destination.y;
+		end
 %}
 
 %token EOF
@@ -59,7 +64,7 @@
 
 %token PAR_G PAR_D VIRG
 
-%token CERCLE RECTANGLE POINT
+%token CERCLE RECTANGLE POINT LIGNE
 
 %token INF SUP INF_EGAL SUP_EGAL
 
@@ -140,4 +145,5 @@ figure:
 	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in let c={centre=p;radius=$7} in print_circle c}
 	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in let r={coinHG=p;width=$7;height=$9} in print_rectangle r}
 	|	POINT PAR_G flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in print_point p}
+	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p1={x=$3;y=$5} in let p2={x=$7;y=$9} in let l={origine=p1;destination=p2} in print_line l}
 ;

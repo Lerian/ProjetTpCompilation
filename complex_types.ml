@@ -10,3 +10,7 @@ type rectangle = {
 	mutable coinHG: point;
 	mutable width: float;
 	mutable height: float}
+
+type ligne = {
+	mutable origine: point;
+	mutable destination: point}
