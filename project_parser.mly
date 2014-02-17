@@ -32,36 +32,6 @@
 		begin
 			Printf.printf "color := %s\n" x;
 		end
-	
-	let print_circle c =
-		begin
-			Printf.printf "Cercle: x = %f y = %f radius = %f\n" c.c_centre.x c.c_centre.y c.c_radius;
-		end
-	
-	let print_rectangle r =
-		begin
-			Printf.printf "Rectangle: x = %f y = %f width = %f height = %f\n" r.r_coinHG.x r.r_coinHG.y r.r_width r.r_height;
-		end
-	
-	let print_point p =
-		begin
-			Printf.printf "Point: x = %f y = %f\n" p.x p.y;
-		end
-	
-	let print_line l =
-		begin
-			Printf.printf "Ligne: x1 = %f y1 = %f x2 = %f y2 = %f\n" l.l_origine.x l.l_origine.y l.l_destination.x l.l_destination.y;
-		end
-	
-	let print_text t =
-		begin
-			Printf.printf "Texte: x = %f y = %f contenu = %s\n" t.t_position.x t.t_position.y t.t_contenu;
-		end
-	
-	let print_image i =
-		begin
-			Printf.printf "Image: width = %d height = %d\n" i.i_width i.i_height;
-		end
 %}
 
 %token EOF
@@ -152,10 +122,16 @@ booleen:
 ;
 
 figure:
-	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in let c={c_centre=p;c_radius=$7} in print_circle c}
-	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in let r={r_coinHG=p;r_width=$7;r_height=$9} in print_rectangle r}
-	|	POINT PAR_G flottant VIRG flottant PAR_D {let p={x=$3;y=$5} in print_point p}
-	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p1={x=$3;y=$5} in let p2={x=$7;y=$9} in let l={l_origine=p1;l_destination=p2} in print_line l}
-	|	TEXTE PAR_G STRING VIRG flottant VIRG flottant PAR_D {let p={x=$5;y=$7} in let t={t_position=p;t_contenu=$3} in print_text t}
+	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in let c={c_centre=p;c_radius=$7} in print_circle c}
+	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in let r={r_coinHG=p;r_width=$7;r_height=$9} in print_rectangle r}
+	|	POINT PAR_G flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in print_point p}
+	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {let p1={p_x=$3;p_y=$5} in let p2={p_x=$7;p_y=$9} in let l={l_origine=p1;l_destination=p2} in print_line l}
+	|	texte {print_text $1}
 	|	IMAGE PAR_G entier VIRG entier PAR_D {let i={i_width=$3;i_height=$5} in print_image i}
 ;
+
+texte:
+	TEXTE PAR_G STRING VIRG flottant VIRG flottant PAR_D {create_text $3 $5 $7 "black" 12}
+	|	TEXTE PAR_G STRING VIRG flottant VIRG flottant VIRG COLOR VIRG entier PAR_D {create_text $3 $5 $7 $9 $11}
+	|	TEXTE PAR_G STRING VIRG flottant VIRG flottant VIRG COLOR PAR_D {create_text $3 $5 $7 $9 12}
+	|	TEXTE PAR_G STRING VIRG flottant VIRG flottant VIRG entier PAR_D {create_text $3 $5 $7 "black" $9}
