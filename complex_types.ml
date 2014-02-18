@@ -63,6 +63,18 @@ let create_line x1 y1 x2 y2 couleurContour epaisseurContour =
 				let l={l_origine=p1; l_destination=p2; l_couleurContour=couleurContour; l_epaisseurContour=epaisseurContour} in
 					l
 	end
+
+let create_point x y =
+	begin
+		let p={p_x=x; p_y=y} in
+			p
+	end
+
+let create_image width height =
+	begin
+		let i={i_width=width; i_height=height} in
+			i
+	end
 	
 (** Affichage *)
 let print_text t =

@@ -1,5 +1,6 @@
 %{
 	open Complex_types
+	open Variables
 
 	let print_float x =
 		begin
@@ -32,11 +33,6 @@
 		begin
 			Printf.printf "color := %s\n" x;
 		end
-
-	let print_var x =
-		begin
-			Printf.printf "variable := %s\n" x;
-		end
 %}
 
 %token EOF
@@ -48,6 +44,8 @@
 %token <string> STRING COLOR VAR
 
 %token PAR_G PAR_D VIRG
+
+%token AFF
 
 %token CERCLE RECTANGLE POINT LIGNE TEXTE IMAGE
 
@@ -84,9 +82,23 @@ expression:
 	
 	|	figure {}
 	
-	|	VAR {print_var $1}
+	|	affectation {}
 	
 	|	ERROR {print_string "error"}
+;
+
+affectation:
+	VAR AFF entier {creation_var_entier $1 $3}
+	|	VAR AFF flottant {creation_var_flottant $1 $3}
+	|	VAR AFF booleen {creation_var_booleen $1 $3}
+	|	VAR AFF texte {creation_var_texte $1 $3}
+	|	VAR AFF cercle {creation_var_cercle $1 $3}
+	|	VAR AFF rectangle {creation_var_rectangle $1 $3}
+	|	VAR AFF ligne {creation_var_ligne $1 $3}
+	|	VAR AFF STRING {creation_var_string $1 $3}
+	|	VAR AFF COLOR {creation_var_color $1 $3}
+	|	VAR AFF point {creation_var_point $1 $3}
+	|	VAR AFF image {creation_var_image $1 $3}
 ;
 
 entier:
@@ -129,12 +141,20 @@ booleen:
 ;
 
 figure:
-	POINT PAR_G flottant VIRG flottant PAR_D {let p={p_x=$3;p_y=$5} in print_point p}
+	point {print_point $1}
 	|	texte {print_text $1}
 	|	cercle {print_circle $1}
 	|	rectangle {print_rectangle $1}
 	|	ligne {print_line $1}
-	|	IMAGE PAR_G entier VIRG entier PAR_D {let i={i_width=$3;i_height=$5} in print_image i}
+	|	image {print_image $1}
+;
+
+point:
+	POINT PAR_G flottant VIRG flottant PAR_D {create_point $3 $5}
+;
+
+image:
+	IMAGE PAR_G entier VIRG entier PAR_D {create_image $3 $5}
 ;
 
 texte:

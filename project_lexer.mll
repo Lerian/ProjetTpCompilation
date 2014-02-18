@@ -54,6 +54,8 @@ rule main = parse
   | ')' {PAR_D}
   | ',' {VIRG}
   
+  | ":=" {AFF}
+  
   (** Les types complexes *)
   | "Circle" {CERCLE}
   | "Rectangle" {RECTANGLE}
