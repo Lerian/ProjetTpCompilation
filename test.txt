@@ -14,4 +14,13 @@ i:=Text("toto",0.0,1.1)
 o:=Rectangle(0.0,0.0,2.2,3.3)
 p:=black
 e:="dqdqd"
-e:=true
+#e:=true
+
+2.5+2.1
+#2.5+z
+2.5+flot
+
+flot2:=5.0
+
+test:=Point(flot,flot2)
+test2:=Text(e,flot,flot2)

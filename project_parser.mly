@@ -77,14 +77,26 @@ expression:
 	flottant {print_float $1}
 	|	entier {print_int $1}
 	|	booleen {print_bool $1}
-	|	STRING {print_string $1}
-	|	COLOR {print_color $1}
+	|	string_symbole {print_string $1}
+	|	color {print_color $1}
 	
 	|	figure {}
 	
 	|	affectation {}
 	
 	|	ERROR {print_string "error"}
+;
+
+string_symbole:
+	STRING {$1}
+	
+	|	VAR {Hashtbl.find variablesString $1}
+;
+
+color:
+	COLOR {$1}
+	
+	|	VAR {Hashtbl.find variablesColor $1}
 ;
 
 affectation:
@@ -95,8 +107,8 @@ affectation:
 	|	VAR AFF cercle {creation_var_cercle $1 $3}
 	|	VAR AFF rectangle {creation_var_rectangle $1 $3}
 	|	VAR AFF ligne {creation_var_ligne $1 $3}
-	|	VAR AFF STRING {creation_var_string $1 $3}
-	|	VAR AFF COLOR {creation_var_color $1 $3}
+	|	VAR AFF string_symbole {creation_var_string $1 $3}
+	|	VAR AFF color {creation_var_color $1 $3}
 	|	VAR AFF point {creation_var_point $1 $3}
 	|	VAR AFF image {creation_var_image $1 $3}
 ;
@@ -110,6 +122,8 @@ entier:
 	|	entier MOD entier {(mod) $1 $3}
 	
 	|	PAR_G entier PAR_D {$2}
+	
+	|	VAR {Hashtbl.find variablesInt $1}
 ;
 
 flottant:
@@ -120,6 +134,8 @@ flottant:
 	|	flottant DIV flottant {(/.) $1 $3}
 	
 	|	PAR_G flottant PAR_D {$2}
+	
+	|	VAR {Hashtbl.find variablesFloat $1}
 ;
 
 booleen:
@@ -138,6 +154,8 @@ booleen:
 	|	booleen OR booleen { (||) $1 $3}
 	
 	|	PAR_G booleen PAR_D {$2}
+	
+	|	VAR {Hashtbl.find variablesBool $1}
 ;
 
 figure:
@@ -151,27 +169,39 @@ figure:
 
 point:
 	POINT PAR_G flottant VIRG flottant PAR_D {create_point $3 $5}
+	
+	|	VAR {Hashtbl.find variablesPoint $1}
 ;
 
 image:
 	IMAGE PAR_G entier VIRG entier PAR_D {create_image $3 $5}
+	
+	|	VAR {Hashtbl.find variablesImage $1}
 ;
 
 texte:
-	TEXTE PAR_G STRING VIRG flottant VIRG flottant PAR_D {create_text $3 $5 $7 "black" 12}
-	|	TEXTE PAR_G STRING VIRG flottant VIRG flottant VIRG COLOR VIRG entier PAR_D {create_text $3 $5 $7 $9 $11}
+	TEXTE PAR_G string_symbole VIRG flottant VIRG flottant PAR_D {create_text $3 $5 $7 "black" 12}
+	|	TEXTE PAR_G string_symbole VIRG flottant VIRG flottant VIRG color VIRG entier PAR_D {create_text $3 $5 $7 $9 $11}
+	
+	|	VAR {Hashtbl.find variablesTexte $1}
 ;
 
 cercle:
 	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {create_circle $3 $5 $7 "black" "white" 1}
-	|	CERCLE PAR_G flottant VIRG flottant VIRG flottant VIRG COLOR VIRG COLOR VIRG entier PAR_D {create_circle $3 $5 $7 $9 $11 $13}
+	|	CERCLE PAR_G flottant VIRG flottant VIRG flottant VIRG color VIRG color VIRG entier PAR_D {create_circle $3 $5 $7 $9 $11 $13}
+	
+	|	VAR {Hashtbl.find variablesCercle $1}
 ;
 
 rectangle:
 	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {create_rectangle $3 $5 $7 $9 "black" "white" 1}
-	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant VIRG COLOR VIRG COLOR VIRG entier PAR_D {create_rectangle $3 $5 $7 $9 $11 $13 $15}
+	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant VIRG color VIRG color VIRG entier PAR_D {create_rectangle $3 $5 $7 $9 $11 $13 $15}
+	
+	|	VAR {Hashtbl.find variablesRectangle $1}
 ;
 
 ligne:
 	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {create_line $3 $5 $7 $9 "black" 1}
-	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant VIRG COLOR VIRG entier PAR_D {create_line $3 $5 $7 $9 $11 $13}
+	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant VIRG color VIRG entier PAR_D {create_line $3 $5 $7 $9 $11 $13}
+	
+	|	VAR {Hashtbl.find variablesLigne $1}
