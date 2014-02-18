@@ -5,6 +5,7 @@
 
 let blank = [' ' '\t' '\r']
 let digit = ['0'-'9']
+let letter = ['a'-'z']|['A'-'Z']
 
 (** Types primitifs *)
 let flottant = digit+'.'digit+
@@ -13,8 +14,7 @@ let couleur = "red"|"blue"|"yellow"|"green"|"black"|"white"
 let booleen = "true"|"false"
 let chaineCaracs =  "\""[^'"']*"\""
 
-(** Opérateurs *)
-let operateurBooleen = "and"|"or"
+let variable = letter(letter|digit|'_')*
 
 
 
@@ -61,6 +61,8 @@ rule main = parse
   |	"Line" {LIGNE}
   | "Text" {TEXTE}
   | "Image" {IMAGE}
+  
+  | variable as x {VAR x}
   
   | eof { EOF }
   | _ {ERROR}

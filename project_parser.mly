@@ -32,6 +32,11 @@
 		begin
 			Printf.printf "color := %s\n" x;
 		end
+
+	let print_var x =
+		begin
+			Printf.printf "variable := %s\n" x;
+		end
 %}
 
 %token EOF
@@ -40,7 +45,7 @@
 %token <float> FLOAT
 %token <int> INT
 %token <bool> BOOL
-%token <string> STRING COLOR
+%token <string> STRING COLOR VAR
 
 %token PAR_G PAR_D VIRG
 
@@ -78,6 +83,8 @@ expression:
 	|	COLOR {print_color $1}
 	
 	|	figure {}
+	
+	|	VAR {print_var $1}
 	
 	|	ERROR {print_string "error"}
 ;
