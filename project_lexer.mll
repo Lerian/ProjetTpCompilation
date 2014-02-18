@@ -53,6 +53,7 @@ rule main = parse
   | '(' {PAR_G}
   | ')' {PAR_D}
   | ',' {VIRG}
+  | ';' {P_VIRG}
   
   | ":=" {AFF}
   

@@ -43,7 +43,7 @@
 %token <bool> BOOL
 %token <string> STRING COLOR VAR
 
-%token PAR_G PAR_D VIRG
+%token PAR_G PAR_D VIRG P_VIRG
 
 %token AFF
 
@@ -66,14 +66,14 @@
 %%
 
 main:
-	expressions EOF {}
+	instructions EOF {}
 ;
 
-expressions:
-	expression {}
-	|	expression expressions {}
+instructions:
+	instruction P_VIRG {}
+	|	instruction P_VIRG instructions {}
 
-expression:
+instruction:
 	flottant {print_float $1}
 	|	entier {print_int $1}
 	|	booleen {print_bool $1}
