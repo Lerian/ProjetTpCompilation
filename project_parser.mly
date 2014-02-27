@@ -41,9 +41,9 @@
 %token <float> FLOAT
 %token <int> INT
 %token <bool> BOOL
-%token <string> STRING COLOR VAR
+%token <string> STRING COLOR VAR FIELD
 
-%token PAR_G PAR_D VIRG P_VIRG
+%token PAR_G PAR_D VIRG P_VIRG DOT
 
 %token AFF
 
@@ -86,6 +86,10 @@ instruction:
 	
 	|	ERROR {print_string "error"}
 ;
+
+variables:
+	VAR {variableHandling $1}
+	|	FIELD {variableFieldHandling $1}
 
 string_symbole:
 	STRING {$1}

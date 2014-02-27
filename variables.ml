@@ -14,6 +14,14 @@ let variablesTexte : (string, texte) Hashtbl.t = Hashtbl.create 10
 let variablesImage : (string, image) Hashtbl.t = Hashtbl.create 10
 	
 (** Fonctions gérant les variables *)
+let variableHandling varName =
+	begin
+	end
+
+let variableFieldHandling fieldName =
+	begin
+	end
+	
 (** Création *)
 let creation_var_entier name value =
 	begin

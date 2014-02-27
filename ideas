@@ -1,0 +1,51 @@
+																												prog
+						
+					instr																					instr																					instr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+instr:
+	+	-	*	/	%	<	>	<=	>=	and	or	:=	
+	
+	
+=======================================================================================================================================
+
+																																i
+																											+								if
+																								a					b				<						i2
+																																1   2			-				:=
+																																				c   d		 g   "a"
+	
+	
+========================================================================================================================================
+
+variable:
+
+field:
+	tester existance de la variable
+		-> ok : tester existance champ
+							-> ok : affecter
+							-> no : erreur
+		-> no : erreur
+
+
+type node = {
+	operator : Operator
+	left : node
+	right : right
+	position:	
+	ligne :
+}............	
+	

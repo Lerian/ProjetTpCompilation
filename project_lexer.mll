@@ -15,7 +15,7 @@ let booleen = "true"|"false"
 let chaineCaracs =  "\""[^'"']*"\""
 
 let variable = letter(letter|digit|'_')*
-
+let variableField = (letter|'_')(letter|digit|'_')*
 
 
 
@@ -56,6 +56,7 @@ rule main = parse
   | ';' {P_VIRG}
   
   | ":=" {AFF}
+  | '.' {DOT}
   
   (** Les types complexes *)
   | "Circle" {CERCLE}
@@ -66,6 +67,7 @@ rule main = parse
   | "Image" {IMAGE}
   
   | variable as x {VAR x}
+  | variableField as y {FIELD y}
   
   | eof { EOF }
   | _ {ERROR}
