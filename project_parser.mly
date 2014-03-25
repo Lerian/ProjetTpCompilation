@@ -41,9 +41,11 @@
 %token <float> FLOAT
 %token <int> INT
 %token <bool> BOOL
-%token <string> STRING COLOR VAR
+%token <string> STRING COLOR VAR FIELD
 
 %token PAR_G PAR_D VIRG P_VIRG
+
+%token DOT
 
 %token AFF
 
@@ -74,18 +76,41 @@ instructions:
 	|	instruction P_VIRG instructions {}
 
 instruction:
-	flottant {print_float $1}
-	|	entier {print_int $1}
-	|	booleen {print_bool $1}
-	|	string_symbole {print_string $1}
-	|	color {print_color $1}
-	
-	|	figure {}
-	
+	instanciation {}
 	|	affectation {}
-	
-	|	ERROR {print_string "error"}
+	|	dessin {}
+	|	controle {}
+	|	ERROR {Printf.printf "error\n"}
 ;
+
+instanciation:
+	VAR AFF entier {creation_var_entier $1 $3}
+	|	VAR AFF flottant {creation_var_flottant $1 $3}
+	|	VAR AFF booleen {creation_var_booleen $1 $3}
+	|	VAR AFF texte {creation_var_texte $1 $3}
+	|	VAR AFF cercle {creation_var_cercle $1 $3}
+	|	VAR AFF rectangle {creation_var_rectangle $1 $3}
+	|	VAR AFF ligne {creation_var_ligne $1 $3}
+	|	VAR AFF string_symbole {creation_var_string $1 $3}
+	|	VAR AFF color {creation_var_color $1 $3}
+	|	VAR AFF point {creation_var_point $1 $3}
+	|	VAR AFF image {creation_var_image $1 $3}
+;
+
+affectation:
+	affectationVar {}
+	|	affectationField {}
+;
+
+dessin:
+	{}
+;
+
+controle:
+	{}
+;
+
+
 
 string_symbole:
 	STRING {$1}
@@ -99,7 +124,7 @@ color:
 	|	VAR {Hashtbl.find variablesColor $1}
 ;
 
-affectation:
+affectationVar:
 	VAR AFF entier {creation_var_entier $1 $3}
 	|	VAR AFF flottant {creation_var_flottant $1 $3}
 	|	VAR AFF booleen {creation_var_booleen $1 $3}
@@ -111,6 +136,20 @@ affectation:
 	|	VAR AFF color {creation_var_color $1 $3}
 	|	VAR AFF point {creation_var_point $1 $3}
 	|	VAR AFF image {creation_var_image $1 $3}
+;
+
+affectationField:
+	VAR DOT FIELD AFF entier {(**if var_has_field_entier $1 $3 then update_var_field_entier $1 $3 $5*)}
+	|	VAR DOT FIELD AFF flottant {(**if var_has_field_flottant $1 $3 then update_var_field_flottant $1 $3 $5*)}
+	|	VAR DOT FIELD AFF booleen {(**if var_has_field_booleen $1 $3 then update_var_field_booleen $1 $3 $5*)}
+	|	VAR DOT FIELD AFF texte {(**if var_has_field_texte $1 $3 then update_var_field_texte $1 $3 $5*)}
+	|	VAR DOT FIELD AFF cercle {(**if var_has_field_cercle $1 $3 then update_var_field_cercle $1 $3 $5*)}
+	|	VAR DOT FIELD AFF rectangle {(**if var_has_field_rectangle $1 $3 then update_var_field_rectangle $1 $3 $5*)}
+	|	VAR DOT FIELD AFF ligne {(**if var_has_field_ligne $1 $3 then update_var_field_ligne $1 $3 $5*)}
+	|	VAR DOT FIELD AFF string_symbole {(**if var_has_field_string_symbole $1 $3 then update_var_field_string_symbole $1 $3 $5*)}
+	|	VAR DOT FIELD AFF color {(**if var_has_field_color $1 $3 then update_var_field_color $1 $3 $5*)}
+	|	VAR DOT FIELD AFF point {(**if var_has_field_point $1 $3 then update_var_field_point $1 $3 $5*)}
+	|	VAR DOT FIELD AFF image {(**if var_has_field_image $1 $3 then update_var_field_image $1 $3 $5*)}
 ;
 
 entier:

@@ -16,6 +16,8 @@ let chaineCaracs =  "\""[^'"']*"\""
 
 let variable = letter(letter|digit|'_')*
 
+let field = (letter|'_')(letter|digit|'_')*
+
 
 
 
@@ -66,6 +68,8 @@ rule main = parse
   | "Image" {IMAGE}
   
   | variable as x {VAR x}
+  |	field as x {FIELD x}
+  | '.' {DOT}
   
   | eof { EOF }
   | _ {ERROR}

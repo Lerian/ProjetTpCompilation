@@ -12,6 +12,8 @@ let variablesRectangle : (string, rectangle) Hashtbl.t = Hashtbl.create 10
 let variablesLigne : (string, ligne) Hashtbl.t = Hashtbl.create 10
 let variablesTexte : (string, texte) Hashtbl.t = Hashtbl.create 10
 let variablesImage : (string, image) Hashtbl.t = Hashtbl.create 10
+
+let variables : (string, type_t_values * type_t) Hashtbl.t = Hashtbl.create 100
 	
 (** Fonctions gérant les variables *)
 (** Création *)
@@ -233,4 +235,32 @@ let creation_var_image name value =
 			begin
 				Hashtbl.replace variablesImage name value;
 			end
+	end
+
+(** Récupération d'une variable selon son nom, quel que soit son type 
+let get_var varName =
+	begin
+		try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> try Hashtbl.find variablesInt varName with
+			Not_found -> Printf.printf "variable %s introuvable en mémoire\n" varName;
+	end*)
+
+(** Vérification d'existance d'un champ *)
+let var_has_field_entier varName fieldName =
+	begin
+		true
+	end
+
+let update_var_field_entier varName fieldName value =
+	begin
+	
 	end

@@ -33,6 +33,32 @@ type image = {
 	i_width: int;
 	i_height: int}
 
+type type_t_values =
+	|Entier
+	|Flottant
+	|Booleen
+	|Chaine
+	|Couleur
+	|Cercle
+	|Rectangle
+	|Ligne
+	|Texte
+	|Image
+
+type type_t =
+	|Entier of int
+	|Flottant of float
+	|Booleen of bool
+	|Chaine of string
+	|Couleur of string
+	|Cercle of cercle
+	|Rectangle of rectangle
+	|Ligne of ligne
+	|Texte of texte
+	|Image of image
+	
+
+
 (** Les fonctions liées aux types définis précédemment *)
 (** Création *)
 let create_text contenu x y couleur tailleFonte =
