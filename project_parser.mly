@@ -1,7 +1,7 @@
 %{
 	open Complex_types
 	open Variables
-
+	
 	let print_float x =
 		begin
 			Printf.printf "float := %f\n" x;
@@ -115,13 +115,13 @@ controle:
 string_symbole:
 	STRING {$1}
 	
-	|	VAR {Hashtbl.find variablesString $1}
+	|	VAR {get_string_value $1}
 ;
 
 color:
 	COLOR {$1}
 	
-	|	VAR {Hashtbl.find variablesColor $1}
+	|	VAR {get_color_value $1}
 ;
 
 affectationVar:
@@ -139,17 +139,17 @@ affectationVar:
 ;
 
 affectationField:
-	VAR DOT FIELD AFF entier {(**if var_has_field_entier $1 $3 then update_var_field_entier $1 $3 $5*)}
-	|	VAR DOT FIELD AFF flottant {(**if var_has_field_flottant $1 $3 then update_var_field_flottant $1 $3 $5*)}
-	|	VAR DOT FIELD AFF booleen {(**if var_has_field_booleen $1 $3 then update_var_field_booleen $1 $3 $5*)}
-	|	VAR DOT FIELD AFF texte {(**if var_has_field_texte $1 $3 then update_var_field_texte $1 $3 $5*)}
-	|	VAR DOT FIELD AFF cercle {(**if var_has_field_cercle $1 $3 then update_var_field_cercle $1 $3 $5*)}
-	|	VAR DOT FIELD AFF rectangle {(**if var_has_field_rectangle $1 $3 then update_var_field_rectangle $1 $3 $5*)}
-	|	VAR DOT FIELD AFF ligne {(**if var_has_field_ligne $1 $3 then update_var_field_ligne $1 $3 $5*)}
-	|	VAR DOT FIELD AFF string_symbole {(**if var_has_field_string_symbole $1 $3 then update_var_field_string_symbole $1 $3 $5*)}
-	|	VAR DOT FIELD AFF color {(**if var_has_field_color $1 $3 then update_var_field_color $1 $3 $5*)}
-	|	VAR DOT FIELD AFF point {(**if var_has_field_point $1 $3 then update_var_field_point $1 $3 $5*)}
-	|	VAR DOT FIELD AFF image {(**if var_has_field_image $1 $3 then update_var_field_image $1 $3 $5*)}
+	VAR FIELD AFF entier {(**if var_has_field_entier $1 $3 then update_var_field_entier $1 $3 $5*)}
+	|	VAR FIELD AFF flottant {(**if var_has_field_flottant $1 $3 then update_var_field_flottant $1 $3 $5*)}
+	|	VAR FIELD AFF booleen {(**if var_has_field_booleen $1 $3 then update_var_field_booleen $1 $3 $5*)}
+	|	VAR FIELD AFF texte {(**if var_has_field_texte $1 $3 then update_var_field_texte $1 $3 $5*)}
+	|	VAR FIELD AFF cercle {(**if var_has_field_cercle $1 $3 then update_var_field_cercle $1 $3 $5*)}
+	|	VAR FIELD AFF rectangle {(**if var_has_field_rectangle $1 $3 then update_var_field_rectangle $1 $3 $5*)}
+	|	VAR FIELD AFF ligne {(**if var_has_field_ligne $1 $3 then update_var_field_ligne $1 $3 $5*)}
+	|	VAR FIELD AFF string_symbole {(**if var_has_field_string_symbole $1 $3 then update_var_field_string_symbole $1 $3 $5*)}
+	|	VAR FIELD AFF color {(**if var_has_field_color $1 $3 then update_var_field_color $1 $3 $5*)}
+	|	VAR FIELD AFF point {(**if var_has_field_point $1 $3 then update_var_field_point $1 $3 $5*)}
+	|	VAR FIELD AFF image {(**if var_has_field_image $1 $3 then update_var_field_image $1 $3 $5*)}
 ;
 
 entier:
@@ -162,7 +162,7 @@ entier:
 	
 	|	PAR_G entier PAR_D {$2}
 	
-	|	VAR {Hashtbl.find variablesInt $1}
+	|	VAR {get_int_value $1}
 ;
 
 flottant:
@@ -174,7 +174,7 @@ flottant:
 	
 	|	PAR_G flottant PAR_D {$2}
 	
-	|	VAR {Hashtbl.find variablesFloat $1}
+	|	VAR {get_float_value $1}
 ;
 
 booleen:
@@ -194,7 +194,7 @@ booleen:
 	
 	|	PAR_G booleen PAR_D {$2}
 	
-	|	VAR {Hashtbl.find variablesBool $1}
+	|	VAR {get_boolean_value $1}
 ;
 
 figure:
@@ -209,38 +209,38 @@ figure:
 point:
 	POINT PAR_G flottant VIRG flottant PAR_D {create_point $3 $5}
 	
-	|	VAR {Hashtbl.find variablesPoint $1}
+	|	VAR {get_point_value $1}
 ;
 
 image:
 	IMAGE PAR_G entier VIRG entier PAR_D {create_image $3 $5}
 	
-	|	VAR {Hashtbl.find variablesImage $1}
+	|	VAR {get_image_value $1}
 ;
 
 texte:
 	TEXTE PAR_G string_symbole VIRG flottant VIRG flottant PAR_D {create_text $3 $5 $7 "black" 12}
 	|	TEXTE PAR_G string_symbole VIRG flottant VIRG flottant VIRG color VIRG entier PAR_D {create_text $3 $5 $7 $9 $11}
 	
-	|	VAR {Hashtbl.find variablesTexte $1}
+	|	VAR {get_text_value $1}
 ;
 
 cercle:
 	CERCLE PAR_G flottant VIRG flottant VIRG flottant PAR_D {create_circle $3 $5 $7 "black" "white" 1}
 	|	CERCLE PAR_G flottant VIRG flottant VIRG flottant VIRG color VIRG color VIRG entier PAR_D {create_circle $3 $5 $7 $9 $11 $13}
 	
-	|	VAR {Hashtbl.find variablesCercle $1}
+	|	VAR {get_circle_value $1}
 ;
 
 rectangle:
 	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {create_rectangle $3 $5 $7 $9 "black" "white" 1}
 	|	RECTANGLE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant VIRG color VIRG color VIRG entier PAR_D {create_rectangle $3 $5 $7 $9 $11 $13 $15}
 	
-	|	VAR {Hashtbl.find variablesRectangle $1}
+	|	VAR {get_rectangle_value $1}
 ;
 
 ligne:
 	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant PAR_D {create_line $3 $5 $7 $9 "black" 1}
 	|	LIGNE PAR_G flottant VIRG flottant VIRG flottant VIRG flottant VIRG color VIRG entier PAR_D {create_line $3 $5 $7 $9 $11 $13}
 	
-	|	VAR {Hashtbl.find variablesLigne $1}
+	|	VAR {get_line_value $1}

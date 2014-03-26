@@ -68,8 +68,7 @@ rule main = parse
   | "Image" {IMAGE}
   
   | variable as x {VAR x}
-  |	field as x {FIELD x}
-  | '.' {DOT}
+  |	'.'(field as x) {FIELD x}
   
   | eof { EOF }
   | _ {ERROR}

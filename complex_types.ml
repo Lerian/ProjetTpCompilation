@@ -34,16 +34,17 @@ type image = {
 	i_height: int}
 
 type type_t_values =
-	|Entier
-	|Flottant
-	|Booleen
-	|Chaine
-	|Couleur
-	|Cercle
-	|Rectangle
-	|Ligne
-	|Texte
-	|Image
+	|Entier_t
+	|Flottant_t
+	|Booleen_t
+	|Chaine_t
+	|Couleur_t
+	|Cercle_t
+	|Rectangle_t
+	|Ligne_t
+	|Texte_t
+	|Image_t
+	|Point_t
 
 type type_t =
 	|Entier of int
@@ -56,6 +57,7 @@ type type_t =
 	|Ligne of ligne
 	|Texte of texte
 	|Image of image
+	|Point of point
 	
 
 

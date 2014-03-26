@@ -1,241 +1,324 @@
 open Complex_types
 
-(** Les tables pour stocker les variables, selon leurs types *)
-let variablesInt : (string, int) Hashtbl.t = Hashtbl.create 10
-let variablesFloat : (string, float) Hashtbl.t = Hashtbl.create 10
-let variablesBool : (string, bool) Hashtbl.t = Hashtbl.create 10
-let variablesString : (string, string) Hashtbl.t = Hashtbl.create 10
-let variablesColor : (string, string) Hashtbl.t = Hashtbl.create 10
-let variablesPoint : (string, point) Hashtbl.t = Hashtbl.create 10
-let variablesCercle : (string, cercle) Hashtbl.t = Hashtbl.create 10
-let variablesRectangle : (string, rectangle) Hashtbl.t = Hashtbl.create 10
-let variablesLigne : (string, ligne) Hashtbl.t = Hashtbl.create 10
-let variablesTexte : (string, texte) Hashtbl.t = Hashtbl.create 10
-let variablesImage : (string, image) Hashtbl.t = Hashtbl.create 10
-
+(** La table pour stocker les variables *)
 let variables : (string, type_t_values * type_t) Hashtbl.t = Hashtbl.create 100
 	
 (** Fonctions gérant les variables *)
 (** Création *)
 let creation_var_entier name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Entier_t, _) 	->	Hashtbl.replace variables name (Entier_t, Entier value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesInt name value;
+				Hashtbl.add variables name (Entier_t, Entier value);
 			end
 	end
 
 let creation_var_flottant name value =
 	begin
-		if((Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Flottant_t, _) 	->	Hashtbl.replace variables name (Flottant_t, Flottant value)
+				|	_					->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesFloat name value;
+				Hashtbl.add variables name (Flottant_t, Flottant value);
 			end
 	end
 
 let creation_var_booleen name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Booleen_t, _) 	->	Hashtbl.replace variables name (Booleen_t, Booleen value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesBool name value;
+				Hashtbl.add variables name (Booleen_t, Booleen value);
 			end
 	end
 
 let creation_var_texte name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Texte_t, _) 	->	Hashtbl.replace variables name (Texte_t, Texte value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesTexte name value;
+				Hashtbl.add variables name (Texte_t, Texte value);
 			end
 	end
 
 let creation_var_cercle name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Cercle_t, _) 	->	Hashtbl.replace variables name (Cercle_t, Cercle value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesCercle name value;
+				Hashtbl.add variables name (Cercle_t, Cercle value);
 			end
 	end
 
 let creation_var_rectangle name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Rectangle_t, _) 	->	Hashtbl.replace variables name (Rectangle_t, Rectangle value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesRectangle name value;
+				Hashtbl.add variables name (Rectangle_t, Rectangle value);
 			end
 	end
 
 let creation_var_ligne name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Ligne_t, _) 	->	Hashtbl.replace variables name (Ligne_t, Ligne value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesLigne name value;
+				Hashtbl.add variables name (Ligne_t, Ligne value);
 			end
 	end
 
 let creation_var_string name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Chaine_t, _) 	->	Hashtbl.replace variables name (Chaine_t, Chaine value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesString name value;
+				Hashtbl.add variables name (Chaine_t, Chaine value);
 			end
 	end
 
 let creation_var_color name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Couleur_t, _) 	->	Hashtbl.replace variables name (Couleur_t, Couleur value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesColor name value;
+				Hashtbl.add variables name (Couleur_t, Couleur value);
 			end
 	end
 
 let creation_var_point name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesInt name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesImage name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Point_t, _) 	->	Hashtbl.replace variables name (Point_t, Point value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesPoint name value;
+				Hashtbl.add variables name (Point_t, Point value);
 			end
 	end
 
 let creation_var_image name value =
 	begin
-		if((Hashtbl.mem variablesFloat name)
-			||	(Hashtbl.mem variablesBool name)
-			||	(Hashtbl.mem variablesString name)
-			||	(Hashtbl.mem variablesColor name)
-			||	(Hashtbl.mem variablesPoint name)
-			||	(Hashtbl.mem variablesCercle name)
-			||	(Hashtbl.mem variablesRectangle name)
-			||	(Hashtbl.mem variablesLigne name)
-			||	(Hashtbl.mem variablesTexte name)
-			||	(Hashtbl.mem variablesInt name))
+		if(Hashtbl.mem variables name)
 		then
-			Printf.printf "erreur de type de variable : %s\n" name
+			match Hashtbl.find variables name with
+				|	(Image_t, _) 	->	Hashtbl.replace variables name (Image_t, Image value)
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
 		else
 			begin
-				Hashtbl.replace variablesImage name value;
+				Hashtbl.add variables name (Image_t, Image value);
 			end
 	end
+(** Récupération de la valeur d'une variable *)
+let get_float_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Flottant_t, Flottant x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_int_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Entier_t, Entier x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+
+let get_boolean_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Booleen_t, Booleen x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_point_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Point_t, Point x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_image_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Image_t, Image x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_text_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Texte_t, Texte x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_circle_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Cercle_t, Cercle x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_rectangle_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Rectangle_t, Rectangle x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_line_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Ligne_t, Ligne x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_string_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Chaine_t, Chaine x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+let get_color_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Couleur_t, Couleur x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+			begin
+				raise Not_found
+			end
+	end
+
+
+
+
+
+
 
 (** Récupération d'une variable selon son nom, quel que soit son type 
 let get_var varName =
