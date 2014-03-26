@@ -51,6 +51,8 @@
 
 %token CERCLE RECTANGLE POINT LIGNE TEXTE IMAGE
 
+%token DESSIN
+
 %token INF SUP INF_EGAL SUP_EGAL
 
 %left INF SUP INF_EGAL SUP_EGAL
@@ -68,7 +70,7 @@
 %%
 
 main:
-	instructions EOF {}
+	instructions EOF {close_files}
 ;
 
 instructions:
@@ -103,7 +105,7 @@ affectation:
 ;
 
 dessin:
-	{}
+	DESSIN image figure {}
 ;
 
 controle:

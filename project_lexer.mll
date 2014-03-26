@@ -67,6 +67,8 @@ rule main = parse
   | "Text" {TEXTE}
   | "Image" {IMAGE}
   
+  | "draw" {DESSIN}
+  
   | variable as x {VAR x}
   |	'.'(field as x) {FIELD x}
   

@@ -2,9 +2,61 @@ open Complex_types
 
 (** La table pour stocker les variables *)
 let variables : (string, type_t_values * type_t) Hashtbl.t = Hashtbl.create 100
+
+(** la table pour stocker les fichiers associés aux images *)
+let files : (string, out_channel) Hashtbl.t = Hashtbl.create 5
+
+(** Création d'un fichier pour enregistrer une image *)
+let create_file fileName width height =
+	begin
+		let file = open_out fileName in
+			begin
+				output_string file "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+				output_string file "<svg\n";
+				output_string file "	xmlns=\"http://www.w3.org/2000/svg\"\n";
+				output_string file "	version=\"1.1\"\n";
+				output_string file ("	width=\""^(string_of_int width)^"\"\n");
+				output_string file ("	height=\""^(string_of_int height)^"\">\n");
+				output_string file "<title>Exemple simple de figure SVG</title>\n";
+				output_string file "<desc>\n";
+				output_string file "	\n";
+				output_string file "</desc>\n";
+				Hashtbl.add files fileName file;
+			end
+	end
+
+(** Fermeture de la balise xml </svg> d'un fichier *)
+let close_file fileName fileChannel =
+	begin
+		let file = Hashtbl.find files fileName in
+			output_string file "</svg>";
+	end
+	
+(** Fermeture des balises xml </svg> des fichiers ouverts *)
+let close_files =
+	begin
+		Hashtbl.iter close_file files;
+	end
 	
 (** Fonctions gérant les variables *)
 (** Création *)
+
+let creation_var_image name value =
+	begin
+		if(Hashtbl.mem variables name)
+		then
+			match Hashtbl.find variables name with
+				|	(Image_t, _) 	->	Printf.printf "erreur: %s existe déjà.\n" name
+				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
+				;
+		else
+			begin
+				(** création du fichier correspondant *)
+				create_file (name^".svg") (value.i_width) (value.i_height);
+				Hashtbl.add variables name (Image_t, Image value)
+			end
+	end
+
 let creation_var_entier name value =
 	begin
 		if(Hashtbl.mem variables name)
@@ -145,19 +197,6 @@ let creation_var_point name value =
 			end
 	end
 
-let creation_var_image name value =
-	begin
-		if(Hashtbl.mem variables name)
-		then
-			match Hashtbl.find variables name with
-				|	(Image_t, _) 	->	Hashtbl.replace variables name (Image_t, Image value)
-				|	_			->	Printf.printf "erreur: %s existe déjà est le type est mauvais.\n" name
-				;
-		else
-			begin
-				Hashtbl.add variables name (Image_t, Image value);
-			end
-	end
 (** Récupération de la valeur d'une variable *)
 let get_float_value varName =
 	begin
