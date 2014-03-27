@@ -200,12 +200,12 @@ booleen:
 ;
 
 figure:
-	point {print_point $1}
-	|	texte {print_text $1}
-	|	cercle {print_circle $1}
-	|	rectangle {print_rectangle $1}
-	|	ligne {print_line $1}
-	|	image {print_image $1}
+	|	point {(**print_point $1*)}
+	|	texte {(**print_text $1*)}
+	|	cercle {(**print_circle $1*)}
+	|	rectangle {(**print_rectangle $1*)}
+	|	ligne {(**print_line $1*)}
+	|	image {(**print_image $1*)}
 ;
 
 point:

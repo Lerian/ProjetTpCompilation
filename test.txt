@@ -30,3 +30,5 @@ flot2:=5.0+2.3+3.2-1.0*(flot-0.1);
 
 test:=Point(flot,flot2);
 test2:=Text(e,flot,flot2);
+
+draw r o;
