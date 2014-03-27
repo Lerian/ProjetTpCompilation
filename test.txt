@@ -7,6 +7,7 @@ flot:=2.1;
 z:=true;
 e:="aeae";
 r:=Image(5,5);
+titi:=Image(10,10);
 t:=Point(0.0,0.0);
 y:=Circle(0.0,0.0,0.5);
 u:=Line(0.0,0.0,1.1,1.1);

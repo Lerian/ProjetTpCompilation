@@ -4,38 +4,41 @@ open Complex_types
 let variables : (string, type_t_values * type_t) Hashtbl.t = Hashtbl.create 100
 
 (** la table pour stocker les fichiers associés aux images *)
-let files : (string, out_channel) Hashtbl.t = Hashtbl.create 5
+let files : (string, string) Hashtbl.t = Hashtbl.create 5
 
 (** Création d'un fichier pour enregistrer une image *)
 let create_file fileName width height =
 	begin
-		let file = open_out fileName in
+		let file_content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+											^"<svg\n"
+											^"	xmlns=\"http://www.w3.org/2000/svg\"\n"
+											^"	version=\"1.1\"\n"
+											^"	width=\""^(string_of_int width)^"\"\n"
+											^"	height=\""^(string_of_int height)^"\">\n"
+											^"	<title>Exemple simple de figure SVG</title>\n"
+											^"	<desc>\n"
+											^"		\n"
+											^"	</desc>\n" in
 			begin
-				output_string file "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-				output_string file "<svg\n";
-				output_string file "	xmlns=\"http://www.w3.org/2000/svg\"\n";
-				output_string file "	version=\"1.1\"\n";
-				output_string file ("	width=\""^(string_of_int width)^"\"\n");
-				output_string file ("	height=\""^(string_of_int height)^"\">\n");
-				output_string file "<title>Exemple simple de figure SVG</title>\n";
-				output_string file "<desc>\n";
-				output_string file "	\n";
-				output_string file "</desc>\n";
-				Hashtbl.add files fileName file;
+				Hashtbl.add files fileName file_content;
 			end
 	end
 
 (** Fermeture de la balise xml </svg> d'un fichier *)
-let close_file fileName fileChannel =
+let close_file fileName file_content =
 	begin
-		let file = Hashtbl.find files fileName in
-			output_string file "</svg>";
+		let file = open_out fileName in
+			begin
+				output_string file file_content;
+				output_string file "</svg>";
+				close_out file
+			end
 	end
 	
 (** Fermeture des balises xml </svg> des fichiers ouverts *)
-let close_files =
+let close_files () =
 	begin
-		Hashtbl.iter close_file files;
+		Hashtbl.iter (close_file) files
 	end
 	
 (** Fonctions gérant les variables *)

@@ -70,7 +70,7 @@
 %%
 
 main:
-	instructions EOF {close_files}
+	instructions EOF {close_files ()}
 ;
 
 instructions:
@@ -96,7 +96,7 @@ instanciation:
 	|	VAR AFF string_symbole {creation_var_string $1 $3}
 	|	VAR AFF color {creation_var_color $1 $3}
 	|	VAR AFF point {creation_var_point $1 $3}
-	|	VAR AFF image {creation_var_image $1 $3}
+	|	VAR AFF image {creation_var_image $1 $3;}
 ;
 
 affectation:
