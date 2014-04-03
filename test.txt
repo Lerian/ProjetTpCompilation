@@ -9,8 +9,8 @@ e:="aeae";
 r:=Image(100,100);
 titi:=Image(10,10);
 t:=Point(0.0,0.0);
-y:=Circle(0.0,0.0,0.5);
-u:=Line(0.0,0.0,1.1,1.1);
+y:=Circle(50.0,50.0,20.0,red,blue,2);
+u:=Line(0.0,0.0,100.0,100.0);
 i:=Text("toto",0.0,1.1);
 o:=Rectangle(0.0,0.0,20.0,30.0);
 p:=black;
@@ -32,3 +32,5 @@ test:=Point(flot,flot2);
 test2:=Text(e,flot,flot2);
 
 draw r o;
+draw r u;
+draw r y;
