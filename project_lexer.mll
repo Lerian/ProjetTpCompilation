@@ -12,7 +12,7 @@ let flottant = digit+'.'digit+
 let entier = digit+
 let couleur = "red"|"blue"|"yellow"|"green"|"black"|"white"
 let booleen = "true"|"false"
-let chaineCaracs =  "\""[^'"']*"\""
+let chaineCaracs =  [^'"']*
 
 let variable = letter(letter|digit|'_')*
 
@@ -32,7 +32,7 @@ rule main = parse
   | entier as x {INT(int_of_string x)}
   | couleur as x {COLOR x}
   | booleen as x {BOOL(bool_of_string x)}
-  | chaineCaracs as x {STRING x}
+  | '"'(chaineCaracs as x)'"' {STRING x}
   
   (** Les opérateurs arithmétiques *)
   | '+' {PLUS}

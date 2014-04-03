@@ -16,9 +16,7 @@ let shape_to_string shapeName =
 					|(Cercle_t, Cercle x) -> ("	<circle\n		cx=\""^(string_of_float x.c_centre.p_x)^"\" cy=\""^(string_of_float x.c_centre.p_y)^"\"\n		r=\""^(string_of_float x.c_radius)^"\"\n		fill=\""^x.c_couleurRemplissage^"\"\n		stroke=\""^x.c_couleurContour^"\"\n		stroke-width=\""^(string_of_int x.c_epaisseurContour)^"\" />\n")
 					|(Rectangle_t, Rectangle x) -> ("	<rect\n		width=\""^(string_of_float x.r_width)^"\" height=\""^(string_of_float x.r_height)^"\"\n		x=\""^(string_of_float x.r_coinHG.p_x)^"\" y=\""^(string_of_float x.r_coinHG.p_y)^"\"\n		fill=\""^x.r_couleurRemplissage^"\"\n		stroke=\""^x.r_couleurContour^"\"\n		stroke-width=\""^(string_of_int x.r_epaisseurContour)^"\" />\n")
 					|(Ligne_t, Ligne x) -> ("	<line\n		x1=\""^(string_of_float x.l_origine.p_x)^"\" y1=\""^(string_of_float x.l_origine.p_y)^"\"\n		x2=\""^(string_of_float x.l_destination.p_x)^"\" y2=\""^(string_of_float x.l_destination.p_y)^"\"\n		stroke=\""^x.l_couleurContour^"\"\n		stroke-width=\""^(string_of_int x.l_epaisseurContour)^"\" />\n")
-					|(Texte_t, Texte x) ->"texte"
-					|(Image_t, Image x) ->"image"
-					|(Point_t, Point x) ->"point"
+					|(Texte_t, Texte x) -> ("	<text\n		x=\""^(string_of_float x.t_position.p_x)^"\" y=\""^(string_of_float x.t_position.p_y)^"\"\n		fill=\""^(x.t_couleur)^"\"\n		font-size=\""^(string_of_int x.t_tailleFonte)^"\">\n		"^(x.t_contenu)^"\n	</text>\n")
 					| _ -> "erreur"
 					;
 			end
