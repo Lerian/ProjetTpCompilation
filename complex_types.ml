@@ -3,7 +3,7 @@ type point = {
 	mutable p_y:float}
 
 type cercle = {
-	mutable c_centre: point; 
+	mutable c_centre: point;
 	mutable c_radius: float;
 	mutable c_couleurContour: string;
 	mutable c_couleurRemplissage: string;

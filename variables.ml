@@ -6,6 +6,52 @@ let variables : (string, type_t_values * type_t) Hashtbl.t = Hashtbl.create 100
 (** la table pour stocker les fichiers associés aux images *)
 let files : (string, string) Hashtbl.t = Hashtbl.create 5
 
+(** Conversion d'une forme en sa description XML *)
+let shape_to_string shapeName =
+	begin
+		if(Hashtbl.mem variables shapeName)
+		then
+			begin
+				match (Hashtbl.find variables shapeName) with
+					|(Cercle_t, Cercle x) -> "cercle"
+					|(Rectangle_t, Rectangle x) -> ("<rect\n	width=\""^(string_of_float x.r_width)^"\" height=\""^(string_of_float x.r_height)^"\"\n	x=\""^(string_of_float x.r_coinHG.p_x)^"\" y=\""^(string_of_float x.r_coinHG.p_y)^"\"\n	fill=\""^x.r_couleurRemplissage^"\"\n	stroke=\""^x.r_couleurContour^"\"\n	stroke-width=\""^(string_of_int x.r_epaisseurContour)^"\" />\n")
+					|(Ligne_t, Ligne x) ->"ligne"
+					|(Texte_t, Texte x) ->"texte"
+					|(Image_t, Image x) ->"image"
+					|(Point_t, Point x) ->"point"
+					| _ -> "erreur"
+					;
+			end
+		else
+			begin
+				raise Not_found
+			end
+	end
+	
+(** dessin d'une forme dans l'image *)
+let draw_shape imageName shapeName =
+	begin
+		if(Hashtbl.mem files (imageName^".svg"))
+		then
+			if(Hashtbl.mem variables shapeName)
+			then
+				begin
+					let shape_content = shape_to_string shapeName in
+						begin
+							Printf.printf "replace";
+							Hashtbl.replace files (imageName^".svg") ((Hashtbl.find files (imageName^".svg"))^shape_content)
+						end
+				end
+			else
+				begin
+					raise Not_found
+				end
+		else
+			begin
+				raise Not_found
+			end
+	end
+
 (** Création d'un fichier pour enregistrer une image *)
 let create_file fileName width height =
 	begin

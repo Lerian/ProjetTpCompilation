@@ -105,7 +105,7 @@ affectation:
 ;
 
 dessin:
-	DESSIN image figure {}
+	DESSIN VAR VAR {draw_shape $2 $3}
 ;
 
 controle:
@@ -200,12 +200,12 @@ booleen:
 ;
 
 figure:
-	|	point {(**print_point $1*)}
-	|	texte {(**print_text $1*)}
-	|	cercle {(**print_circle $1*)}
-	|	rectangle {(**print_rectangle $1*)}
-	|	ligne {(**print_line $1*)}
-	|	image {(**print_image $1*)}
+	|	rectangle {Rectangle $1}
+	|	point {Point $1}
+	|	texte {Texte $1}
+	|	cercle {Cercle $1}
+	|	ligne {Ligne $1}
+	|	image {Image $1}
 ;
 
 point:
