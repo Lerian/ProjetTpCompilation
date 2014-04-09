@@ -1,6 +1,7 @@
 %{
 	open Complex_types
 	open Variables
+	open Controle
 	
 	let print_float x =
 		begin
@@ -41,9 +42,9 @@
 %token <float> FLOAT
 %token <int> INT
 %token <bool> BOOL
-%token <string> STRING COLOR VAR FIELD
+%token <string> STRING COLOR VAR FIELD 
 
-%token PAR_G PAR_D VIRG P_VIRG
+%token PAR_G PAR_D VIRG P_VIRG CROCHET_G CROCHET_D
 
 %token DOT
 
@@ -58,6 +59,8 @@
 %left INF SUP INF_EGAL SUP_EGAL
 
 %token AND OR
+
+%token IF THEN ELSE
 
 %token PLUS MOINS MUL DIV MOD
 
@@ -78,30 +81,11 @@ instructions:
 	|	instruction P_VIRG instructions {}
 
 instruction:
-	instanciation {}
-	|	affectation {}
+	affectationVar {}
+	|	affectationField {}
 	|	dessin {}
 	|	controle {}
 	|	ERROR {Printf.printf "error\n"}
-;
-
-instanciation:
-	VAR AFF entier {creation_var_entier $1 $3}
-	|	VAR AFF flottant {creation_var_flottant $1 $3}
-	|	VAR AFF booleen {creation_var_booleen $1 $3}
-	|	VAR AFF texte {creation_var_texte $1 $3}
-	|	VAR AFF cercle {creation_var_cercle $1 $3}
-	|	VAR AFF rectangle {creation_var_rectangle $1 $3}
-	|	VAR AFF ligne {creation_var_ligne $1 $3}
-	|	VAR AFF string_symbole {creation_var_string $1 $3}
-	|	VAR AFF color {creation_var_color $1 $3}
-	|	VAR AFF point {creation_var_point $1 $3}
-	|	VAR AFF image {creation_var_image $1 $3;}
-;
-
-affectation:
-	affectationVar {}
-	|	affectationField {}
 ;
 
 dessin:
@@ -109,10 +93,17 @@ dessin:
 ;
 
 controle:
-	{}
+	ifControle {}
+	|	whileControle {}
 ;
 
+ifControle:
+	IF PAR_G booleen PAR_D string_symbole {do_if_true $3 $5}
+;
 
+whileControle:
+	{}
+;
 
 string_symbole:
 	STRING {$1}

@@ -1,0 +1,172 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% HEADER %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper, 12pt]{report}
+
+
+%%%%% Packages %%%%%
+
+	%%%%% Language %%%%% 
+\usepackage[frenchb]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+	%%%%% Graphic %%%%%
+\usepackage{graphicx}
+\usepackage{titlesec}
+
+
+%%%%% Macros %%%%
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+%%%%% Modification du titre du chapitre %%%%%
+\titleformat{\chapter}[hang]{\bf\huge}{}{0pc}{}
+
+
+
+%%%%% Doc's informations %%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% DOCUMENT %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%%%% Page de garde %%%%
+\begin{titlepage}
+	\begin{center}
+
+		\includegraphics[width=0.45\textwidth]{logoUN.png}~\\[2cm]
+
+		\textsc{\LARGE Master 1 Alma}\\[1.5cm]
+
+		% Titre
+		\HRule \\[0.5cm]
+		{ \textsc{\Large Projet de TP de compilation}\\[0.5cm] }
+		\HRule \\[0.5cm]
+
+		\textsc{\Large Conception d'un compilateur d'images SVG}\\[1.5cm]
+
+		% Auteur et Encadrant
+		\emph{\'Etudiant :}\\
+		Vincent \textsc{Raveneau}\\
+		\vspace{0.5cm}
+		\emph{Intervenant :} \\
+		Beno\^it \textsc{Guédas}
+	
+		\vfill
+
+		% Bottom of the page
+		{\large 10 Avril 2014}
+
+	\end{center}
+\end{titlepage}
+
+%%%%% Sommaire %%%%%
+\renewcommand{\contentsname}{Sommaire}
+\tableofcontents
+\newpage
+
+%%%%% Intro %%%%%
+\chapter{Présentation du projet}
+
+Afin de mettre en pratique les différents éléments étudiés lors du cours de compilation et des TPs associés, nous avons eu pour tâche de réaliser un compilateur pour un langage permettant de générer des images au format SVG. Bien que les principaux éléments du langage en question nous aient été imposés par le sujet, leur implémentation restait libre et pouvait être réalisée de différentes façons.
+
+Le compilateur devait être codé en Ocaml, à l'aide d'ocamllex et d'ocamlyacc, et sa réalisation devait être décomposées en différentes étapes successives. Bien que l'ordre et le contenu de ces étapes soient entièrement libres, cette stratégie avait pour but de nous permettre de nous concentrer sur une tâche à la fois. De plus, celà garantissait que lors du déroulement d'une étape, tous les aspects du langage définis dans les étapes précédantes étaient pleinement fonctionnels et non partiellement implémentés.
+
+Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le cadre de ce projet. Une présentation du langage implémenté sera d'abord effectuée, puis chaque étape dans la création du compilateur sera décrite en détail, afin d'illustrer la démarche itérative mise en place.
+
+%%%%% Présentation du langage %%%%%
+\chapter{Présentation du langage implémenté}
+
+	\section{Caractéristiques}
+	
+	Le langage implémenté doit permettre à l'utilisateur de décrire une image au format SVG. Pour celà, il dispose d'un langage de type impératif, dont la syntaxe est similaire au C.
+	
+	[Parler du typage fort ou non, explicite ou non]
+	
+	\section{Syntaxe}
+	
+	[Exemple de code et description des éléments clefs (présentation des erreurs à ne pas faire, genre 0. != 0.0)]
+	
+	\section{\'Eléments non implémentés}
+	
+	Bien que demandés par le sujet, certains éléments principaux du langage n'ont pas été implémentés faute de temps. C'est le cas notamment de la gestion des erreurs, et des structures de contrôle telles que les boucles et les conditionnelles (de type \texttt{if (condition) then (instructions) else (instructions)}).
+
+%%%%% Etape 1 %%%%%
+\chapter{\'Etape 1 : Types primitifs}
+    
+    Lors de cette étape initiale, l'objectif était de permettre au compilateur de détecter les types primitifs du langage, qui sont les suivants:\\
+    
+    \begin{itemize}
+    	\item Les entiers : une suite de chiffres allant de 0 à 9;
+    	\item Les flottants : un entier suivi d'un point et d'un autre entier;
+    	\item Les cha\^ines de caractères : une suite de caractères encadrée par des guillemets droits (\texttt{"});
+    	\item Les booléens : deux valeurs possibles, \texttt{true} et \texttt{false};
+    	\item Les couleurs : six couleurs possibles, \texttt{red}, \texttt{blue}, \texttt{yellow}, \texttt{green}, \texttt{black} et \texttt{white}.\\
+    \end{itemize}
+    
+    \`A partir de cette étape du projet et jusqu'à l'implémentation des variables et des fonctions de dessin, lorsqu'un élément correspondant à un de ces types est identifié, son type et sa valeur sont affichés sur la sortie standard mais aucune action n'est effectuée dessus.
+    
+    [Parler des choix, de l'implémentation]
+    
+%%%%% Etape 2 %%%%%
+\chapter{\'Etape 2 : Opérations sur les types primitifs}
+
+	Une fois les types primitifs intégrés, les opérateurs usuels correspondant ont été implémentés. Ceux-ci peuvent être de trois sortes, selon les types auxquels ils s'appliquent.\\
+	
+	Tout d'abord, les opérateurs arithmétiques ont été mis en place. Ceux-ci sont l'addition (\texttt{+}), la soustraction (\texttt{-}), la multiplication (\texttt{*}), la division (\texttt{/}) et le modulo (\texttt{\%}). Ces opérateurs s'appliquent aux entiers et aux flottants, à l'exception du modulo qui ne s'applique par définition qu'aux entiers. Il est cependant important de noter que les deux opérandes associées à un opérateur doivent être de même type (par exemple, l'addition d'un entier avec un flottant est impossible).\\
+
+	Ensuite, les opérateurs de comparaison ont été  implémentés. Ceux-ci s'appliquent également aux entiers et au flottants, et les opérandes d'un opérateur doivent toujours être de même type. On trouve les opérateurs d'infériorité stricte (\texttt{<}), de supériorité stricte (\texttt{>}), d'infériorité (\texttt{<=}) et de supériorité (\texttt{=>}).\\
+	
+	Enfin, les opérateurs booléens de composition ont été mis en place. Ceux-ci sont le ET logique (\texttt{and}) et le OU logique (\texttt{or}), et s'appliquent aux booléens comme leur nom l'indique. Le OU est ici non-exclusif, ce qui signifie que l'expression \texttt{vrai ou vrai} a pour valeur \texttt{vrai}.\\
+	
+	La prise en compte des parenthèses afin de définir les priorités dans le calcul des expressions a également été mise en place pour les trois catégories d'opérateurs décrites ci-dessus.
+    
+%%%%% Etape 3 %%%%%
+\chapter{\'Etape 3 : Types complexes basiques}
+
+	Après avoir fait en sorte que les types primitifs soient pleinement gérés par le compilateur, il a été nécessaire d'implémenter les types dits "complexes". Ces types s'apparentent aux structures que l'ont peut trouver en C, et sont composés de différents champs ayant chacun un type particulier (le type en question peut être primitif ou complexe).
+
+    - détection des types complexes basiques (sans champs optionnels)
+    	- cercle
+        - rectangle
+        	- point (pour éviter le problème de nommage dans les records, et pour l'utilité)
+        - ligne
+        - texte
+        - image
+        
+%%%%% Etape 4 %%%%%
+\chapter{\'Etape 4: }
+
+    - détection des types complexes plus complexes (avec champs optionnels)
+    	- définition des constructeurs
+        	- uniquement constructeurs basiques pour l'instant (param oblig, param oblig + optionnels)
+            - plus de constructeurs rajoutés à la fin si possible (params variés, (x,y)->point , ...)
+   
+%%%%% Etape 5 %%%%%
+\chapter{\'Etape 5 : }
+
+    - détection des variables
+    	- détection des affectations
+        - enregistrement des variables en mémoire (sans test)
+        - enregistrement des variables en mémoire (avec test)
+        - récupération de la valeur des variables pour réutilisation
+      (- implémentation de la structure des instructions : fin par un ;)
+    
+    
+   																			 	------ production d'un AST entre l'analyse syntaxique et sémantique
+    
+    - modif de la façon dont les variables sont faites
+    - draw
+    
+    																			------ pas respect stricte du fonctionnel (beaucoup de mutable)
+    
+    - progression du draw (modification de la détection des strings pour en retirer les ""
+    
+    - prise en charge du dessin de toutes les formes de base (ligne, rectangle, cercle, texte)
+    
+    																			------ début du travail sur les structures de controle
+    
+\end{document}
