@@ -74,9 +74,9 @@
 %%%%% Intro %%%%%
 \chapter{Présentation du projet}
 
-Afin de mettre en pratique les différents éléments étudiés lors du cours de compilation et des TPs associés, nous avons eu pour tâche de réaliser un compilateur pour un langage permettant de générer des images au format SVG. Bien que les principaux éléments du langage en question nous aient été imposés par le sujet, leur implémentation restait libre et pouvait être réalisée de différentes façons.
+Afin de mettre en pratique les différents éléments étudiés lors du cours de compilation et des TPs associés, nous avons eu pour tâche de réaliser un compilateur pour un langage permettant de générer des images au format SVG. Bien que les principaux éléments du langage en question nous aient été imposés par le sujet, leur implémentation restait libre et pouvait être réalisée de différentes façons.\\
 
-Le compilateur devait être codé en Ocaml, à l'aide d'ocamllex et d'ocamlyacc, et sa réalisation devait être décomposées en différentes étapes successives. Bien que l'ordre et le contenu de ces étapes soient entièrement libres, cette stratégie avait pour but de nous permettre de nous concentrer sur une tâche à la fois. De plus, celà garantissait que lors du déroulement d'une étape, tous les aspects du langage définis dans les étapes précédantes étaient pleinement fonctionnels et non partiellement implémentés.
+Le compilateur devait être codé en Ocaml, à l'aide d'ocamllex et d'ocamlyacc, et sa réalisation devait être décomposées en différentes étapes successives. Bien que l'ordre et le contenu de ces étapes soient entièrement libres, cette stratégie avait pour but de nous permettre de nous concentrer sur une tâche à la fois. De plus, celà garantissait que lors du déroulement d'une étape, tous les aspects du langage définis dans les étapes précédantes étaient pleinement fonctionnels et non partiellement implémentés.\\
 
 Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le cadre de ce projet. Une présentation du langage implémenté sera d'abord effectuée, puis chaque étape dans la création du compilateur sera décrite en détail, afin d'illustrer la démarche itérative mise en place.
 
@@ -85,17 +85,44 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 
 	\section{Caractéristiques}
 	
-	Le langage implémenté doit permettre à l'utilisateur de décrire une image au format SVG. Pour celà, il dispose d'un langage de type impératif, dont la syntaxe est similaire au C.
-	
-	[Parler du typage fort ou non, explicite ou non]
+	Le langage implémenté doit permettre à l'utilisateur de décrire une image au format SVG. Pour celà, il dispose d'un langage de type impératif, dont la syntaxe est similaire au C. Le typage des variables est implicite, et les opérations entre éléments de types différents sont impossibles (par exemple l'addition d'un entier avec un flottant).
 	
 	\section{Syntaxe}
 	
 	[Exemple de code et description des éléments clefs (présentation des erreurs à ne pas faire, genre 0. != 0.0)]
 	
+	\subsection{\'Elements importants}
+	
+	
+	
+	\subsection{Exemple de code valide}
+	
+	Le code suivant est un code valide:
+	
+	\begin{verbatim}
+	demonstration := Image(400,400);
+
+	ligneH := Line(0.0,200.0,400.0,200.0);
+	ligneV := Line(200.0,00.0,200.0,400.0,blue,3);
+	rectangle := Rectangle(0.0,0.0,400.0,200.0,black,yellow,1);
+
+	cercle := Circle(200.0,200.0,50.0); # Un cercle central
+	texte := Text("Image de démonstration",125.0,140.0,red,15);
+
+	draw demonstration rectangle;
+	draw demonstration ligneV;
+	draw demonstration ligneH;
+	draw demonstration cercle;
+	draw demonstration texte;
+	\end{verbatim}
+	
+	L'image générée par ce code est la suivante:\\
+	
+	\includegraphics{demonstration.png}~\\
+	
 	\section{\'Eléments non implémentés}
 	
-	Bien que demandés par le sujet, certains éléments principaux du langage n'ont pas été implémentés faute de temps. C'est le cas notamment de la gestion des erreurs, et des structures de contrôle telles que les boucles et les conditionnelles (de type \texttt{if (condition) then (instructions) else (instructions)}). Dans le cas de la gestion d'erreur, l'implémentation actuelle lève une exception, généralement \texttt{Not_found}, ce qui interrompt la compilation dans tous les cas.
+	Bien que demandés par le sujet, certains éléments principaux du langage n'ont pas été implémentés faute de temps. C'est le cas notamment de la gestion des erreurs, et des structures de contrôle telles que les boucles et les conditionnelles (de type \texttt{if (condition) then (instructions) else (instructions)}). Dans le cas de la gestion d'erreur, l'implémentation actuelle lève une exception, généralement \texttt{Not\_found}, ce qui interrompt la compilation dans tous les cas. L'accès aux champs des types complexes par notation pointée est également manquant.
 
 %%%%% Etape 1 %%%%%
 \chapter{\'Etape 1 : Types primitifs}
@@ -104,17 +131,30 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
     
     \begin{itemize}
     	\item Les entiers : une suite de chiffres allant de 0 à 9;
-    	\item Les flottants : un entier suivi d'un point et d'un autre entier;
+    	\item Les flottants : un entier suivi d'un point et d'un autre entier. La présence d'au moins un chiffre de chaque côté du point est obligatoire;
     	\item Les cha\^ines de caractères : une suite de caractères encadrée par des guillemets droits (\texttt{"});
     	\item Les booléens : deux valeurs possibles, \texttt{true} et \texttt{false};
     	\item Les couleurs : six couleurs possibles, \texttt{red}, \texttt{blue}, \texttt{yellow}, \texttt{green}, \texttt{black} et \texttt{white}.\\
     \end{itemize}
     
+    Leur définition par l'analyseur lexical est donc la suivante:
+    
+    \begin{verbatimtab}[4]
+    	let blank = [' ' '\t' '\r']
+		let digit = ['0'-'9']
+		let letter = ['a'-'z']|['A'-'Z']
+
+		(** Types primitifs *)
+		let flottant = digit+'.'digit+
+		let entier = digit+
+		let couleur = "red"|"blue"|"yellow"|"green"|"black"|"white"
+		let booleen = "true"|"false"
+		let chaineCaracs =  [^'"']*
+    \end{verbatimtab}
+    
     \`A partir de cette étape du projet et jusqu'à l'implémentation des variables et des fonctions de dessin, lorsqu'un élément correspondant à un de ces types est identifié, son type et sa valeur sont affichés sur la sortie standard mais aucune action n'est effectuée dessus.\\
     
     Lors de cette étape, la prise en compte des commentaires a également été mise en place. Ceux-ci sont similaires à ceux que l'on peut trouver en Python, et se caractérisent par le caractère \texttt{\#}. Tout caractère situé après lui sur la même ligne est ignoré par le compilateur.\\
-    
-    [Parler des choix, de l'implémentation]
     
 %%%%% Etape 2 %%%%%
 \chapter{\'Etape 2 : Opérations sur les types primitifs}
@@ -127,7 +167,7 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 	
 	Enfin, les opérateurs booléens de composition ont été mis en place. Ceux-ci sont le ET logique (\texttt{and}) et le OU logique (\texttt{or}), et s'appliquent aux booléens comme leur nom l'indique. Le OU est ici non-exclusif, ce qui signifie que l'expression \texttt{vrai ou vrai} a pour valeur \texttt{vrai}.\\
 	
-	La prise en compte des parenthèses afin de définir les priorités dans le calcul des expressions a également été mise en place pour les trois catégories d'opérateurs décrites ci-dessus.
+	La prise en compte des parenthèses afin de définir les priorités dans le calcul des expressions a également été mise en place pour les trois catégories d'opérateurs décrites ci-dessus. Leur utilisation est effectuée en notation infixée (\textit{operande1 operateur operande2}), les caractères d'espacement entre les opérandes et l'opérateur étant ignorés par le compilateur.
     
 %%%%% Etape 3 %%%%%
 \chapter{\'Etape 3 : Types complexes basiques}
@@ -146,7 +186,26 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 	
 	De plus, afin de simplifier la structure de tous les types nécessitant un point, un type \texttt{Point} à été créé, qui contient les coordonnées associées (deux flottants).\\
 	
-	Pour créer des instances de ces types, il est nécessaire d'utiliser des constructeurs, qui prennent pour paramètre toutes les valeurs des champs du type. Il faut cepandant noter que dans le cas d'un point, les constructeurs prennent deux valeurs correspondant aux coordonnées du point en question, et non une instance de Point.\\
+	Ces différents types ont été définis par des enregistrements, qui sont de la forme suivante (à l'exception de l'image, dont les champs n'ont pas l'attribut \texttt{mutable} étant donné qu'ils ne peuvent être modifiés):\\
+	
+	\begin{verbatimtab}[4]
+	type rectangle = {
+		mutable r_coinHG: point;
+		mutable r_width: float;
+		mutable r_height: float
+	}
+	\end{verbatimtab}
+	
+	Pour créer des instances de ces types, il est nécessaire d'utiliser des constructeurs, qui prennent pour paramètre toutes les valeurs des champs du type. Ceux-ci sont de la forme \textit{nomDuType(param1 , param2)}, avec le nombre de paramètres pouvant varier d'un type à l'autre. Tous les caractères d'espacement présents sont ignorés. Il faut cependant noter que dans le cas d'un point, les constructeurs prennent deux valeurs correspondant aux coordonnées du point en question, et non une instance de Point. Ainsi, les constructeurs disponibles sont les suivants:\\
+	
+	\begin{itemize}
+		\item Pour le cercle : \textit{Circle(centre\_x, centre\_y, rayon)}
+		\item Pour le rectangle : \textit{Rectangle(coin\_x, coin\_y, largeur, hauteur)}
+		\item Pour la ligne : \textit{Line(x1, y1, x2, y2)}
+		\item Pour le texte : \textit{Text(contenu, coin\_x, coin\_y)}
+		\item Pour le image : \textit{Image(largeur, hauteur)}
+		\item Pour le point : \textit{Point(x, y)}\\
+	\end{itemize}
 	
 	\`A cette étape, les valeurs appliquées par le constructeur aux champs de l'instance du type créée ne sont pas modifiables. En effet, le sujet demandais un accès aux différents champs par notation pointée, mais son implémentation n'était pas possible avant la mise en place de variables pour mémoriser les valeurs ainsi créées.
         
@@ -161,7 +220,14 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 		\item Le texte possède une couleur d'écriture (une couleur, par défaut à \texttt{black}) et une taille de fonte (un entier, par défaut à 12).\\
 	\end{itemize}
 	
-	Afin de permettre à l'utilisateur de modifier les valeurs de ces champs, les constructeurs définis lors de l'étape précédante ont été modifiés afin de demande en plus des paramètres obligatoires les paramètres optionnels. Dans le cas où l'utilisateur ne fournirait que les paramètres obligatoires, le compilateur se charge de compléter l'appel au constructeur avec les valeurs par défaut appropriées. Concernant les paramètres optionnels, ils doivent tous être présents ou bien tous être absents, ne fournir qu'une partie d'entre eux au constructeur déclenche une erreur.
+	Afin de permettre à l'utilisateur de modifier les valeurs de ces champs, les constructeurs définis lors de l'étape précédante ont été modifiés afin de demande en plus des paramètres obligatoires les paramètres optionnels. Dans le cas où l'utilisateur ne fournirait que les paramètres obligatoires, le compilateur se charge de compléter l'appel au constructeur avec les valeurs par défaut appropriées. Concernant les paramètres optionnels, ils doivent tous être présents ou bien tous être absents, ne fournir qu'une partie d'entre eux au constructeur déclenche une erreur. La nouvelle forme des constructeurs est donc la suivante:\\
+	
+	\begin{itemize}
+		\item Pour le cercle : \textit{Circle(centre\_x, centre\_y, rayon, couleurContour, couleurRemplissage, epaisseurContour)}
+		\item Pour le rectangle : \textit{Rectangle(coin\_x, coin\_y, largeur, hauteur, couleurContour, couleurRemplissage, epaisseurContour)}
+		\item Pour la ligne : \textit{Line(x1, y1, x2, y2, couleurContour, epaisseurContour)}
+		\item Pour le texte : \textit{Text(contenu, coin\_x, coin\_y, couleur, tailleFonte)}
+	\end{itemize}
 	
 %%%%% Etape 5 %%%%%
 \chapter{\'Etape 5 : Variables et instructions}
@@ -237,7 +303,5 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 	Une fois toutes les instructions exécutées, cette table est parcourue et tous les fichiers correspondant sont créés. Cette solution permet de limiter les opérations d'ouverture/fermeture de fichiers, comparé à une solution où à chaque appel à la primitive de dessin le contenu du fichier aurait été modifié.\\
 	
 	Afin de mettre en place le dessin des variables de type \texttt{Texte}, la façon dont les chaînes de caractères étaient reconnues par l'analyseur lexical a dû être modifiée afin que les guillements identifiant une telle structure n'apparaissent pas systématiquement dans le dessin final.
-
-\chapter{Conclusion}
 
 \end{document}

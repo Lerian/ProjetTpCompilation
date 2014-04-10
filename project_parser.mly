@@ -44,7 +44,7 @@
 %token <bool> BOOL
 %token <string> STRING COLOR VAR FIELD 
 
-%token PAR_G PAR_D VIRG P_VIRG CROCHET_G CROCHET_D
+%token PAR_G PAR_D VIRG P_VIRG
 
 %token DOT
 
@@ -59,8 +59,6 @@
 %left INF SUP INF_EGAL SUP_EGAL
 
 %token AND OR
-
-%token IF THEN ELSE
 
 %token PLUS MOINS MUL DIV MOD
 
@@ -84,25 +82,11 @@ instruction:
 	affectationVar {}
 	|	affectationField {}
 	|	dessin {}
-	|	controle {}
 	|	ERROR {Printf.printf "error\n"}
 ;
 
 dessin:
 	DESSIN VAR VAR {draw_shape $2 $3}
-;
-
-controle:
-	ifControle {}
-	|	whileControle {}
-;
-
-ifControle:
-	IF PAR_G booleen PAR_D string_symbole {do_if_true $3 $5}
-;
-
-whileControle:
-	{}
 ;
 
 string_symbole:

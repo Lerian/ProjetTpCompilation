@@ -399,36 +399,3 @@ let get_color_value varName =
 			end
 	end
 
-
-
-
-
-
-
-(** Récupération d'une variable selon son nom, quel que soit son type 
-let get_var varName =
-	begin
-		try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> try Hashtbl.find variablesInt varName with
-			Not_found -> Printf.printf "variable %s introuvable en mémoire\n" varName;
-	end*)
-
-(** Vérification d'existance d'un champ *)
-let var_has_field_entier varName fieldName =
-	begin
-		true
-	end
-
-let update_var_field_entier varName fieldName value =
-	begin
-	
-	end

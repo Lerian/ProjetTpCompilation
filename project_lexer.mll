@@ -56,8 +56,6 @@ rule main = parse
   | ')' {PAR_D}
   | ',' {VIRG}
   | ';' {P_VIRG}
-  | '{' {CROCHET_G}
-  | '}' {CROCHET_D}
   
   | ":=" {AFF}
   
@@ -70,11 +68,6 @@ rule main = parse
   | "Image" {IMAGE}
   
   | "draw" {DESSIN}
-  
-  (** Les structures de controle *)
-  | "if" {IF}
-  | "then" {THEN}
-  | "else" {ELSE}
   
   | variable as x {VAR x}
   |	'.'(field as x) {FIELD x}
