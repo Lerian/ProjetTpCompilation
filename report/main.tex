@@ -78,7 +78,9 @@ Afin de mettre en pratique les différents éléments étudiés lors du cours de
 
 Le compilateur devait être codé en Ocaml, à l'aide d'ocamllex et d'ocamlyacc, et sa réalisation devait être décomposées en différentes étapes successives. Bien que l'ordre et le contenu de ces étapes soient entièrement libres, cette stratégie avait pour but de nous permettre de nous concentrer sur une tâche à la fois. De plus, celà garantissait que lors du déroulement d'une étape, tous les aspects du langage définis dans les étapes précédantes étaient pleinement fonctionnels et non partiellement implémentés.\\
 
-Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le cadre de ce projet. Une présentation du langage implémenté sera d'abord effectuée, puis chaque étape dans la création du compilateur sera décrite en détail, afin d'illustrer la démarche itérative mise en place.
+Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le cadre de ce projet. Une présentation du langage implémenté sera d'abord effectuée, puis chaque étape dans la création du compilateur sera décrite en détail, afin d'illustrer la démarche itérative mise en place.\\
+
+Au cas où le code correspondant ne serait pas présent avec ce document, il est disponible sur un dépôt Git hébergé par GitHub à l'adresse \texttt{https://github.com/Lerian/ProjetTpCompilation} (la section "\textit{releases}" contient une release par étape du projet décrite plus loin dans ce rapport).
 
 %%%%% Présentation du langage %%%%%
 \chapter{Présentation du langage implémenté}
@@ -89,11 +91,20 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 	
 	\section{Syntaxe}
 	
-	[Exemple de code et description des éléments clefs (présentation des erreurs à ne pas faire, genre 0. != 0.0)]
-	
 	\subsection{\'Elements importants}
 	
+	Les principaux éléments du langage défini sont les suivants:\\
 	
+	\begin{itemize}
+		\item Chaque instruction doit se terminer par un point-virgule
+		\item Le caractère \# permet de commenter tout ce qui suit sur une même ligne
+		\item L'opérateur d'affectation est \texttt{:=}
+		\item Les types primitifs disponibles sont les entiers, les flottants, les booléens, les chaînes de caractères et les couleurs
+		\item Les types complexes disponibles sont les points, les lignes, les cercles, les rectangles les image et les textes (qui diffèrent des chaînes de caractères par le fait qu'ils possèdent une représentation graphique)
+		\item Les opérateurs sur les types primitifs ne peuvent s'appliquer à des types différents (\texttt{0 + 0.0} est incorrect)
+		\item Les caractères d'espacement sont toujours ignorés entre les différents éléments syntaxiques du langage
+		\item La primitive de dessin est \texttt{draw}, et prend en argument l'image et la forme à dessiner
+	\end{itemize}
 	
 	\subsection{Exemple de code valide}
 	
@@ -240,7 +251,7 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 	
 	Les variables permettent de mémoriser des valeurs de types primitifs ou complexes qui leur sont affectées. Cette opération est effectuée par l'opérateur d'affectation \texttt{:=}. Le nom d'une variable est composé d'une suite de lettres (minuscules et majuscules), de chiffres et du caractère '\_', mais doit commencer par une lettre.\\
 	
-	Une première tentative a été réalisée, où chaque type de variable était stocké dans une table qui lui était propre, mais cette implémentation demandait de trop nombreux tests sur les types avant le moindre accès à une variable, ce qui rendait le code lourd et peu pratique. De plus, vérifier qu'une nouvelle variable n'était pas déjà déclarée dans la table d'un autre type était fastidieux. C'est pour cette raison que la façon dont les variables sont stockées a été modifiée de la façon suivante:\\
+	Une première tentative a été réalisée, où chaque type de variable était stocké dans une table qui lui était propre, mais cette implémentation demandait de trop nombreux tests sur les types avant le moindre accès à une variable, ce qui rendait le code lourd et peu pratique. De plus, vérifier qu'une nouvelle variable n'était pas déjà déclarée dans la table d'un autre type était fastidieux. C'est pour cette raison que la façon dont les variables sont gérées a été modifiée afin d'arriver à l'implémentation décrite dans les paragraphes suivants.\\
 	
 	Le compilateur enregistre les variables déclarées dans une Hashtbl, qui associe une cha\^ine de caractères (le nom de la variable) à un couple composé du type et de la valeur de la variable. \`A chaque fois qu'une affectation est réalisée, le compilateur vérifie si la variable correspondante est présente dans la table ou non. Si c'est le cas, il vérifie que le type associé est respecté, puis met à jour la valeur. Sinon, la variable, sa valeur et son type sont ajoutés à la table. Les variables de type image agissent cependant de façon légèrement différente. En effet, comme elles ne peuvent être modifiées, l'affectation échoue si la variable existe déjà dans la table.\\
 	
