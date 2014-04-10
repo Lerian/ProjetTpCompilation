@@ -14,6 +14,9 @@
 	%%%%% Graphic %%%%%
 \usepackage{graphicx}
 \usepackage{titlesec}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{multicol}
 
 
 %%%%% Macros %%%%
@@ -92,7 +95,7 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 	
 	\section{\'Eléments non implémentés}
 	
-	Bien que demandés par le sujet, certains éléments principaux du langage n'ont pas été implémentés faute de temps. C'est le cas notamment de la gestion des erreurs, et des structures de contrôle telles que les boucles et les conditionnelles (de type \texttt{if (condition) then (instructions) else (instructions)}).
+	Bien que demandés par le sujet, certains éléments principaux du langage n'ont pas été implémentés faute de temps. C'est le cas notamment de la gestion des erreurs, et des structures de contrôle telles que les boucles et les conditionnelles (de type \texttt{if (condition) then (instructions) else (instructions)}). Dans le cas de la gestion d'erreur, l'implémentation actuelle lève une exception, généralement \texttt{Not_found}, ce qui interrompt la compilation dans tous les cas.
 
 %%%%% Etape 1 %%%%%
 \chapter{\'Etape 1 : Types primitifs}
@@ -107,7 +110,9 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
     	\item Les couleurs : six couleurs possibles, \texttt{red}, \texttt{blue}, \texttt{yellow}, \texttt{green}, \texttt{black} et \texttt{white}.\\
     \end{itemize}
     
-    \`A partir de cette étape du projet et jusqu'à l'implémentation des variables et des fonctions de dessin, lorsqu'un élément correspondant à un de ces types est identifié, son type et sa valeur sont affichés sur la sortie standard mais aucune action n'est effectuée dessus.
+    \`A partir de cette étape du projet et jusqu'à l'implémentation des variables et des fonctions de dessin, lorsqu'un élément correspondant à un de ces types est identifié, son type et sa valeur sont affichés sur la sortie standard mais aucune action n'est effectuée dessus.\\
+    
+    Lors de cette étape, la prise en compte des commentaires a également été mise en place. Ceux-ci sont similaires à ceux que l'on peut trouver en Python, et se caractérisent par le caractère \texttt{\#}. Tout caractère situé après lui sur la même ligne est ignoré par le compilateur.\\
     
     [Parler des choix, de l'implémentation]
     
@@ -127,46 +132,112 @@ Ce rapport a donc pour but de présenter le travail que j'ai effectué dans le c
 %%%%% Etape 3 %%%%%
 \chapter{\'Etape 3 : Types complexes basiques}
 
-	Après avoir fait en sorte que les types primitifs soient pleinement gérés par le compilateur, il a été nécessaire d'implémenter les types dits "complexes". Ces types s'apparentent aux structures que l'ont peut trouver en C, et sont composés de différents champs ayant chacun un type particulier (le type en question peut être primitif ou complexe).
-
-    - détection des types complexes basiques (sans champs optionnels)
-    	- cercle
-        - rectangle
-        	- point (pour éviter le problème de nommage dans les records, et pour l'utilité)
-        - ligne
-        - texte
-        - image
+	Après avoir fait en sorte que les types primitifs soient pleinement gérés par le compilateur, il a été nécessaire d'implémenter les types dits "complexes". Ces types s'apparentent aux structures que l'ont peut trouver en C, et sont composés de différents champs ayant chacun un type particulier (le type en question peut être primitif ou complexe). Ces types ont été implémentés en deux étapes. En effet, ils comportent des champs dont la valeur permet de personnaliser l'apparence des objets (en déterminant par exemple la couleur d'un texte). Les champs indispensables ont tous été implémentés dans cette étape, ce qui m'a permis d'avoir des objets fonctionnels pour commencer à mettre en place les champs optionnels dans l'étape suivante.\\
+	
+	Les types complexes implémentés sont les suivants:\\
+	
+	\begin{itemize}
+		\item Le cercle, composé d'un point central et d'un rayon (un flottant);
+		\item Le rectangle, composé du point de son extrémité haute/gauche, d'une largeur (un flottant) et d'une hauteur (un flottant);
+		\item La ligne, composée de deux points pour ses extrémités;
+		\item Le texte, composé du point de son extrémité basse/gauche et de la cha\^ine de caractères correspondante;
+		\item L'image, composée d'une largeur (un entier) et d'une hauteur (un entier).\\
+	\end{itemize}
+	
+	De plus, afin de simplifier la structure de tous les types nécessitant un point, un type \texttt{Point} à été créé, qui contient les coordonnées associées (deux flottants).\\
+	
+	Pour créer des instances de ces types, il est nécessaire d'utiliser des constructeurs, qui prennent pour paramètre toutes les valeurs des champs du type. Il faut cepandant noter que dans le cas d'un point, les constructeurs prennent deux valeurs correspondant aux coordonnées du point en question, et non une instance de Point.\\
+	
+	\`A cette étape, les valeurs appliquées par le constructeur aux champs de l'instance du type créée ne sont pas modifiables. En effet, le sujet demandais un accès aux différents champs par notation pointée, mais son implémentation n'était pas possible avant la mise en place de variables pour mémoriser les valeurs ainsi créées.
         
 %%%%% Etape 4 %%%%%
-\chapter{\'Etape 4: }
+\chapter{\'Etape 4: Types complexes évolués}
 
-    - détection des types complexes plus complexes (avec champs optionnels)
-    	- définition des constructeurs
-        	- uniquement constructeurs basiques pour l'instant (param oblig, param oblig + optionnels)
-            - plus de constructeurs rajoutés à la fin si possible (params variés, (x,y)->point , ...)
-   
+	Comme dit dans la description de l'étape précédante, les types complexes possèdent des champs optionnels destinés à paramétrer l'apparence des objets créés. Ces champs ont été implémentés dans cette étape du projet, et sont les suivants:\\
+	
+	\begin{itemize}
+		\item Le cercle et le rectangle possèdent une épaisseur de contour (un entier, par défaut à 1), une couleur de remplissage (une couleur, par défaut à \texttt{white}) et une couleur de contour (une couleur, par défaut à \texttt{black});
+		\item La ligne possède une épaisseur de contour (un entier, par défaut à 1) et une couleur de contour (une couleur, par défaut à \texttt{black});
+		\item Le texte possède une couleur d'écriture (une couleur, par défaut à \texttt{black}) et une taille de fonte (un entier, par défaut à 12).\\
+	\end{itemize}
+	
+	Afin de permettre à l'utilisateur de modifier les valeurs de ces champs, les constructeurs définis lors de l'étape précédante ont été modifiés afin de demande en plus des paramètres obligatoires les paramètres optionnels. Dans le cas où l'utilisateur ne fournirait que les paramètres obligatoires, le compilateur se charge de compléter l'appel au constructeur avec les valeurs par défaut appropriées. Concernant les paramètres optionnels, ils doivent tous être présents ou bien tous être absents, ne fournir qu'une partie d'entre eux au constructeur déclenche une erreur.
+	
 %%%%% Etape 5 %%%%%
-\chapter{\'Etape 5 : }
+\chapter{\'Etape 5 : Variables et instructions}
 
-    - détection des variables
-    	- détection des affectations
-        - enregistrement des variables en mémoire (sans test)
-        - enregistrement des variables en mémoire (avec test)
-        - récupération de la valeur des variables pour réutilisation
-      (- implémentation de la structure des instructions : fin par un ;)
-    
-    
-   																			 	------ production d'un AST entre l'analyse syntaxique et sémantique
-    
-    - modif de la façon dont les variables sont faites
-    - draw
-    
-    																			------ pas respect stricte du fonctionnel (beaucoup de mutable)
-    
-    - progression du draw (modification de la détection des strings pour en retirer les ""
-    
-    - prise en charge du dessin de toutes les formes de base (ligne, rectangle, cercle, texte)
-    
-    																			------ début du travail sur les structures de controle
-    
+	\`A ce stade, toutes les fonctionnalités nécessaires à la création d'une image sont présentes et fonctionnelles, à l'exception de la prise en compte des variables, et de l'instruction de dessin elle-même. Cette étape aura donc pour but de mettre ceci en place, afin de produire les premiers fichiers SVG. Pour faciliter la gestion des différentes instructions qui allaient devoir être prises en compte, c'est à ce moment qu'à été mise en place l'obligation de terminer chaque instruction par un point-virgule, comme demandé par le sujet.\\
+	
+	Une première version avait d'abord été réalisée, dans laquelle on distinguait deux étapes distinctes pour l'analyseur syntaxique et l'analyseur sémantique, avec la construction d'un arbre syntaxique abstrait par le premier qui était utilisé par le second. Cependant, le temps nécessaire à sa mise en place était trop important (de nombreuses modifications devant être effectuées sur la structure du compilateur), c'est pourquoi ces deux étapes sont réunies en une seule dans l'implémentation actuelle.
+	
+	\section{Les variables}
+	
+	Les variables permettent de mémoriser des valeurs de types primitifs ou complexes qui leur sont affectées. Cette opération est effectuée par l'opérateur d'affectation \texttt{:=}. Le nom d'une variable est composé d'une suite de lettres (minuscules et majuscules), de chiffres et du caractère '\_', mais doit commencer par une lettre.\\
+	
+	Une première tentative a été réalisée, où chaque type de variable était stocké dans une table qui lui était propre, mais cette implémentation demandait de trop nombreux tests sur les types avant le moindre accès à une variable, ce qui rendait le code lourd et peu pratique. De plus, vérifier qu'une nouvelle variable n'était pas déjà déclarée dans la table d'un autre type était fastidieux. C'est pour cette raison que la façon dont les variables sont stockées a été modifiée de la façon suivante:\\
+	
+	Le compilateur enregistre les variables déclarées dans une Hashtbl, qui associe une cha\^ine de caractères (le nom de la variable) à un couple composé du type et de la valeur de la variable. \`A chaque fois qu'une affectation est réalisée, le compilateur vérifie si la variable correspondante est présente dans la table ou non. Si c'est le cas, il vérifie que le type associé est respecté, puis met à jour la valeur. Sinon, la variable, sa valeur et son type sont ajoutés à la table. Les variables de type image agissent cependant de façon légèrement différente. En effet, comme elles ne peuvent être modifiées, l'affectation échoue si la variable existe déjà dans la table.\\
+	
+	Afin de pouvoir construire une table telle que décrite ci-dessus, qui puisse stocker des variables de différents types, les deux types suivants ont dû être définis:
+
+\begin{multicols}{2}
+\begin{verbatimtab}[4]
+	type type_t_values =
+		|Entier_t
+		|Flottant_t
+		|Booleen_t
+		|Chaine_t
+		|Couleur_t
+		|Cercle_t
+		|Rectangle_t
+		|Ligne_t
+		|Texte_t
+		|Image_t
+		|Point_t
+		
+	type type_t =
+		|Entier of int
+		|Flottant of float
+		|Booleen of bool
+		|Chaine of string
+		|Couleur of string
+		|Cercle of cercle
+		|Rectangle of rectangle
+		|Ligne of ligne
+		|Texte of texte
+		|Image of image
+		|Point of point
+\end{verbatimtab}
+\end{multicols}
+	
+	Lors de l'accès à une variable, le compilateur récupère simplement dans la table la valeur associée. La récupération de la valeur d'une variable d'un type donné étant effectuée par une fonction différente de celle permettant la récupération d'une valeur d'un autre type, une vérification sur la concordance du type de la valeur retournée est également effectuée. Un exemple d'une telle fonction est le suivant:
+	
+\begin{verbatimtab}[4]
+	let get_float_value varName =
+	begin
+		if(Hashtbl.mem variables varName)
+		then
+			match Hashtbl.find variables varName with
+				|	(Flottant_t, Flottant x)	->	x
+				|	_				->	raise Not_found
+				;
+		else
+				raise Not_found
+	end
+\end{verbatimtab}
+
+	Le comportemant si la variable est de type \texttt{Image} est légèrement différent, et sera décrit dans la partie suivante, consacrée à la primitive de dessin.
+
+	\section{La primitive de dessin}
+	
+	La primitive de dessin \texttt{draw} prend en paramètres deux variables, une de type \texttt{Image} et l'autre d'un type correspondant à une forme dessinable (cercle, rectangle, texte ou ligne). La forme donnée est ainsi ajoutée à l'image, afin d'être dessinée dans le fichier SVG produit.\\
+	
+	Pour chaque variable de types \texttt{Image}, un fichier est créé (nommé \textit{nomDelaVariable.svg}) une fois que toutes les instructions du programme ont été exécutées. Lors de leur exécution, la valeur du fichier est stockée dans une deuxième table qui associe au nom de la variable le contenu du fichier correspondant. Chaque appel à la primitive de dessin concatène donc la valeur actuelle associée avec la description de la forme donnée.\\
+	
+	Une fois toutes les instructions exécutées, cette table est parcourue et tous les fichiers correspondant sont créés. Cette solution permet de limiter les opérations d'ouverture/fermeture de fichiers, comparé à une solution où à chaque appel à la primitive de dessin le contenu du fichier aurait été modifié.\\
+	
+	Afin de mettre en place le dessin des variables de type \texttt{Texte}, la façon dont les chaînes de caractères étaient reconnues par l'analyseur lexical a dû être modifiée afin que les guillements identifiant une telle structure n'apparaissent pas systématiquement dans le dessin final.
+
+\chapter{Conclusion}
+
 \end{document}
